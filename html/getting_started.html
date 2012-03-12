@@ -51,6 +51,54 @@
 <h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="creating-a-new-java-package">
 <h2>Creating a new Java package<a class="headerlink" href="#creating-a-new-java-package" title="Permalink to this headline">¶</a></h2>
+<p>The following steps will be wrapped up in package creation script in the near
+future.</p>
+<ol class="arabic simple">
+<li>Use <tt class="docutils literal"><span class="pre">roscreate-pkg</span></tt> to create a new package. See
+<a class="reference external" href="http://ros.org/wiki/ROS/Tutorials/CreatingPackage">ROS/Tutorials/CreatingPackage</a>.</li>
+<li>Remove the generated <tt class="docutils literal"><span class="pre">Makefile</span></tt> and <tt class="docutils literal"><span class="pre">CMakeLists.txt</span></tt> files.</li>
+<li>Add a new build.gradle file (see <em class="xref std std-ref">build-gradle-example</em>).</li>
+<li>Put your your Java sources in <tt class="docutils literal"><span class="pre">src/main/java</span></tt>.</li>
+<li>Assuming you have already completed <a class="reference internal" href="building.html"><em>Building rosjava_core</em></a>, you can now call
+<tt class="docutils literal"><span class="pre">gradle</span> <span class="pre">build</span></tt> to build your package.</li>
+</ol>
+<div class="section" id="build-gradle-example">
+<span id="minimal-example"></span><h3>build.gradle example<a class="headerlink" href="#build-gradle-example" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-groovy"><div class="highlight"><pre><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;java&#39;</span>
+
+<span class="c1">// The Maven plugin is only required if your package is used as a library.</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;maven&#39;</span>
+
+<span class="c1">// The Application plugin and mainClassName attribute are only required if</span>
+<span class="c1">// your package is used as a binary.</span>
+<span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;application&#39;</span>
+<span class="n">mainClassName</span> <span class="o">=</span> <span class="s1">&#39;org.ros.RosRun&#39;</span>
+
+<span class="n">sourceCompatibility</span> <span class="o">=</span> <span class="mf">1.6</span>
+<span class="n">targetCompatibility</span> <span class="o">=</span> <span class="mf">1.6</span>
+
+<span class="n">repositories</span> <span class="o">{</span>
+  <span class="n">mavenLocal</span><span class="o">()</span>
+  <span class="n">maven</span> <span class="o">{</span>
+    <span class="n">url</span> <span class="s1">&#39;http://robotbrains.hideho.org/nexus/content/groups/ros-public&#39;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+
+<span class="n">version</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">.</span><span class="mi">0</span><span class="o">-</span><span class="n">SNAPSHOT</span>
+<span class="n">group</span> <span class="o">=</span> <span class="n">ros</span><span class="o">.</span><span class="na">my_stack</span>
+
+<span class="n">dependencies</span> <span class="o">{</span>
+  <span class="n">compile</span> <span class="s1">&#39;ros.rosjava_core:rosjava:0.0.0-SNAPSHOT&#39;</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>If you use the <a class="reference external" href="http://gradle.org/docs/current/userguide/maven_plugin.html">Maven plugin</a>, you may use <tt class="docutils literal"><span class="pre">gradle</span> <span class="pre">install</span></tt> to install your
+package to your local .m2 cache and make it available to other rosjava packages
+on your system.</p>
+<p>If you use the <a class="reference external" href="http://gradle.org/docs/current/userguide/application_plugin.html">Application plugin</a>, you may use <tt class="docutils literal"><span class="pre">gradle</span> <span class="pre">installApp</span></tt> to create
+an executable wrapper for your package.</p>
+<p>See the Gradle <a class="reference external" href="http://gradle.org/docs/current/userguide/tutorial_java_projects.html">Java tutorial</a> for more details.</p>
+</div>
 </div>
 <div class="section" id="creating-nodes">
 <h2>Creating nodes<a class="headerlink" href="#creating-nodes" title="Permalink to this headline">¶</a></h2>
@@ -201,7 +249,10 @@ logging outputs for ROS.</p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">Getting started</a><ul>
-<li><a class="reference internal" href="#creating-a-new-java-package">Creating a new Java package</a></li>
+<li><a class="reference internal" href="#creating-a-new-java-package">Creating a new Java package</a><ul>
+<li><a class="reference internal" href="#build-gradle-example">build.gradle example</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#creating-nodes">Creating nodes</a></li>
 <li><a class="reference internal" href="#messages">Messages</a><ul>
 <li><a class="reference internal" href="#messages-as-blobs-advanced">Messages as BLOBs (Advanced)</a></li>
