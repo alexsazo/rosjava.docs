@@ -11,11 +11,11 @@ future.
    :roswiki:`ROS/Tutorials/CreatingPackage`.
 #. Remove the generated ``Makefile`` and ``CMakeLists.txt`` files.
 #. Add a new build.gradle file (see :ref:`build-gradle-example`).
-#. Put your your Java sources in ``src/main/java``.
+#. Put your your Java sources in ``src/main/java`` and your tests in ``src/test/java``.
 #. Assuming you have already completed :doc:`building`, you can now call
-   ``gradle build`` to build your package.
+   ``gradle build`` to build and test your package.
 
-.. _minimal-example:
+.. _build-gradle-example:
 
 build.gradle example
 ~~~~~~~~~~~~~~~~~~~~

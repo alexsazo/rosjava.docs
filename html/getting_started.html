@@ -57,13 +57,13 @@ future.</p>
 <li>Use <tt class="docutils literal"><span class="pre">roscreate-pkg</span></tt> to create a new package. See
 <a class="reference external" href="http://ros.org/wiki/ROS/Tutorials/CreatingPackage">ROS/Tutorials/CreatingPackage</a>.</li>
 <li>Remove the generated <tt class="docutils literal"><span class="pre">Makefile</span></tt> and <tt class="docutils literal"><span class="pre">CMakeLists.txt</span></tt> files.</li>
-<li>Add a new build.gradle file (see <em class="xref std std-ref">build-gradle-example</em>).</li>
-<li>Put your your Java sources in <tt class="docutils literal"><span class="pre">src/main/java</span></tt>.</li>
+<li>Add a new build.gradle file (see <a class="reference internal" href="#build-gradle-example"><em>build.gradle example</em></a>).</li>
+<li>Put your your Java sources in <tt class="docutils literal"><span class="pre">src/main/java</span></tt> and your tests in <tt class="docutils literal"><span class="pre">src/test/java</span></tt>.</li>
 <li>Assuming you have already completed <a class="reference internal" href="building.html"><em>Building rosjava_core</em></a>, you can now call
-<tt class="docutils literal"><span class="pre">gradle</span> <span class="pre">build</span></tt> to build your package.</li>
+<tt class="docutils literal"><span class="pre">gradle</span> <span class="pre">build</span></tt> to build and test your package.</li>
 </ol>
 <div class="section" id="build-gradle-example">
-<span id="minimal-example"></span><h3>build.gradle example<a class="headerlink" href="#build-gradle-example" title="Permalink to this headline">¶</a></h3>
+<span id="id1"></span><h3>build.gradle example<a class="headerlink" href="#build-gradle-example" title="Permalink to this headline">¶</a></h3>
 <div class="highlight-groovy"><div class="highlight"><pre><span class="n">apply</span> <span class="nl">plugin:</span> <span class="s1">&#39;java&#39;</span>
 
 <span class="c1">// The Maven plugin is only required if your package is used as a library.</span>
