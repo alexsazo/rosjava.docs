@@ -47,10 +47,20 @@
   <div class="section" id="building-rosjava-core">
 <h1>Building rosjava_core<a class="headerlink" href="#building-rosjava-core" title="Permalink to this headline">¶</a></h1>
 <p>rosjava_core uses the <a class="reference external" href="http://www.gradle.com/">Gradle</a> build system. To build rosjava_core, execute the <a class="reference external" href="http://gradle.org/docs/current/userguide/gradle_wrapper.html">gradle wrapper</a>:</p>
+<p>Note that the build process currently involves extra steps that will be folded into Gradle tasks.</p>
 <ol class="arabic simple">
 <li>roscd rosjava_core</li>
-<li>./gradlew</li>
+<li>./gradlew rosjava_bootstrap:install</li>
+<li>rosrun rosjava_bootstrap install_generated_modules.py rosjava</li>
+<li>./gradlew rosjava:install</li>
 </ol>
+<p>Then, for each rosjava_core package you&#8217;re interested in (e.g. foo):</p>
+<ol class="arabic simple">
+<li>rosrun rosjava_bootstrap install_generated_modules.py foo</li>
+<li>./gradlew foo:install</li>
+</ol>
+<p>See the rosjava <a class="reference external" href="javadoc/index.html">Javadoc</a> to learn more about the API.</p>
+<p>Note that package level documentation is in progress.</p>
 </div>
 
 
