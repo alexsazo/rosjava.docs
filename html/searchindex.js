@@ -1,0 +1,1 @@
+Search.setIndex({objects:{},terms:{roscd:0,gradl:0,search:1,welcom:1,execut:0,index:1,modul:1,gradlew:0,system:0,wrapper:0,content:1,build:[0,1],indic:1,tabl:1,document:1,page:1,rosjava_cor:[0,1]},objtypes:{},titles:["Building rosjava_core","Welcome to rosjava_core&#8217;s documentation!"],objnames:{},filenames:["building","index"]})
