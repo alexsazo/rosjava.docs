@@ -3,13 +3,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to rosjava_core’s documentation! &mdash; rosjava_core v0.0.0-SNAPSHOT documentation</title>
+    <title>rosjava_core &mdash; rosjava_core 0.0.0-SNAPSHOT documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -22,8 +25,8 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="rosjava_core v0.0.0-SNAPSHOT documentation" href="#" />
-    <link rel="next" title="Building rosjava_core" href="building.html" /> 
+    <link rel="top" title="rosjava_core 0.0.0-SNAPSHOT documentation" href="#" />
+    <link rel="next" title="Overview" href="overview.html" /> 
   </head>
   <body>
     <div class="related">
@@ -33,9 +36,9 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="building.html" title="Building rosjava_core"
+          <a href="overview.html" title="Overview"
              accesskey="N">next</a> |</li>
-        <li><a href="#">rosjava_core v0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
+        <li><a href="#">rosjava_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -44,22 +47,47 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="welcome-to-rosjava-core-s-documentation">
-<h1>Welcome to rosjava_core&#8217;s documentation!<a class="headerlink" href="#welcome-to-rosjava-core-s-documentation" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="rosjava-core">
+<h1>rosjava_core<a class="headerlink" href="#rosjava-core" title="Permalink to this headline">¶</a></h1>
+<p>rosjava is a pure Java implementation of ROS. It provides a client library that
+enables Java programmers to quickly interface with ROS Topics, Services, and
+Parameters. It also provides a Java implementation of <a class="reference external" href="http://ros.org/wiki/roscore">roscore</a>. Using rosjava
+is ideal when you need to:</p>
+<ul class="simple">
+<li>interact with prior Java programs or libraries</li>
+<li>write Android apps that work with ROS</li>
+</ul>
+<p>Please see the <a class="reference internal" href="overview.html"><em>Overview</em></a> page for documentation on how to use rosjava in your
+projects.</p>
+<p>Support is best found on <a class="reference external" href="http://answers.ros.org/">http://answers.ros.org/</a>.</p>
+<p>Please file bugs and feature requests on the rosjava <a class="reference external" href="http://code.google.com/p/rosjava/issues/list">issues</a> page. Starring
+issues that are important to you will help developers prioritize their work.</p>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="overview.html">Overview</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overview.html#asynchronous">Asynchronous</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="building.html">Building rosjava_core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="best_practices.html">Best practices</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="best_practices.html#java-package-names">Java package names</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#creating-a-new-java-package">Creating a new Java package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#creating-nodes">Creating nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#messages">Messages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#publishers-and-subscribers">Publishers and subscribers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#services">Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#parameters">Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#logging">Logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#exceptions">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting_started.html#running-nodes">Running nodes</a></li>
+</ul>
+</li>
 </ul>
 </div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
-<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
-<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
-</ul>
 </div>
 
 
@@ -68,17 +96,9 @@
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="#">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Welcome to rosjava_core&#8217;s documentation!</a><ul>
-</ul>
-</li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
-</ul>
-
   <h4>Next topic</h4>
-  <p class="topless"><a href="building.html"
-                        title="next chapter">Building rosjava_core</a></p>
+  <p class="topless"><a href="overview.html"
+                        title="next chapter">Overview</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -87,7 +107,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -108,14 +128,14 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="building.html" title="Building rosjava_core"
+          <a href="overview.html" title="Overview"
              >next</a> |</li>
-        <li><a href="#">rosjava_core v0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
+        <li><a href="#">rosjava_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012, Google, Inc..
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>

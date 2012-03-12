@@ -1,0 +1,136 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Overview &mdash; rosjava_core 0.0.0-SNAPSHOT documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0-SNAPSHOT',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="rosjava_core 0.0.0-SNAPSHOT documentation" href="index.html" />
+    <link rel="next" title="Building rosjava_core" href="building.html" />
+    <link rel="prev" title="rosjava_core" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="building.html" title="Building rosjava_core"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="rosjava_core"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">rosjava_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="overview">
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<p>While rosjava is mostly feature complete, it is currently under active
+development. Consider all APIs and documentation to be volatile.</p>
+<p><a class="reference external" href="javadoc/index.html">Javadoc</a> is used extensively and cross referenced from
+this documentation.</p>
+<p>Note that package level documentation is in progress.</p>
+<div class="section" id="asynchronous">
+<h2>Asynchronous<a class="headerlink" href="#asynchronous" title="Permalink to this headline">¶</a></h2>
+<p>Because ROS is heavily dependent on network communication, rosjava is
+asynchronous. No attempt is made to hide asynchronous behavior behind a
+synchronous API. As a result, the rosjava APIs may feel unfamiliar.</p>
+<p>First, you will not find a <tt class="docutils literal"><span class="pre">spin()</span></tt> method. Unlike other client libraries,
+many rosjava nodes can run in a thread pool within a single JVM process. In
+this way, rosjava nodes are similar to C++ nodlets. In the future, rosjava
+nodes will support in memory communication in the same way that C++ nodelets do
+today.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Overview</a><ul>
+<li><a class="reference internal" href="#asynchronous">Asynchronous</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">rosjava_core</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="building.html"
+                        title="next chapter">Building rosjava_core</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/overview.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="building.html" title="Building rosjava_core"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="rosjava_core"
+             >previous</a> |</li>
+        <li><a href="index.html">rosjava_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Google, Inc..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

@@ -3,13 +3,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
+
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Building rosjava_core &mdash; rosjava_core v0.0.0-SNAPSHOT documentation</title>
+    <title>Building rosjava_core &mdash; rosjava_core 0.0.0-SNAPSHOT documentation</title>
+    
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
@@ -22,8 +25,9 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="rosjava_core v0.0.0-SNAPSHOT documentation" href="index.html" />
-    <link rel="prev" title="Welcome to rosjava_core’s documentation!" href="index.html" /> 
+    <link rel="top" title="rosjava_core 0.0.0-SNAPSHOT documentation" href="index.html" />
+    <link rel="next" title="Best practices" href="best_practices.html" />
+    <link rel="prev" title="Overview" href="overview.html" /> 
   </head>
   <body>
     <div class="related">
@@ -33,9 +37,12 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="index.html" title="Welcome to rosjava_core’s documentation!"
+          <a href="best_practices.html" title="Best practices"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">rosjava_core v0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
+        <li><a href="index.html">rosjava_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -46,9 +53,12 @@
             
   <div class="section" id="building-rosjava-core">
 <h1>Building rosjava_core<a class="headerlink" href="#building-rosjava-core" title="Permalink to this headline">¶</a></h1>
-<p>rosjava_core uses the <a class="reference external" href="http://www.gradle.com/">Gradle</a> build system. To build rosjava_core, execute the <a class="reference external" href="http://gradle.org/docs/current/userguide/gradle_wrapper.html">gradle wrapper</a>:</p>
-<p>Note that the build process currently involves extra steps that will be folded into Gradle tasks.</p>
+<p>rosjava_core uses the <a class="reference external" href="http://www.gradle.com/">Gradle</a> build system. <a class="reference external" href="http://ros.org/wiki/rosmake/">rosmake</a> is not supported.</p>
+<p>To build rosjava_core, execute the <a class="reference external" href="http://gradle.org/docs/current/userguide/gradle_wrapper.html">gradle wrapper</a>:</p>
+<p>Note that the build process currently involves extra steps that will be folded
+into Gradle tasks or otherwise eliminated.</p>
 <ol class="arabic simple">
+<li><a class="reference external" href="http://maven.apache.org/download.html">Install Maven 3</a>.</li>
 <li>roscd rosjava_core</li>
 <li>./gradlew rosjava_bootstrap:install</li>
 <li>rosrun rosjava_bootstrap install_generated_modules.py rosjava</li>
@@ -59,8 +69,10 @@
 <li>rosrun rosjava_bootstrap install_generated_modules.py foo</li>
 <li>./gradlew foo:install</li>
 </ol>
-<p>See the rosjava <a class="reference external" href="javadoc/index.html">Javadoc</a> to learn more about the API.</p>
-<p>Note that package level documentation is in progress.</p>
+<p>To generate Eclipse project files:</p>
+<ol class="arabic simple">
+<li>./gradlew foo:eclipse</li>
+</ol>
 </div>
 
 
@@ -70,8 +82,11 @@
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Welcome to rosjava_core&#8217;s documentation!</a></p>
+  <p class="topless"><a href="overview.html"
+                        title="previous chapter">Overview</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="best_practices.html"
+                        title="next chapter">Best practices</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/building.txt"
@@ -80,7 +95,7 @@
 <div id="searchbox" style="display: none">
   <h3>Quick search</h3>
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" size="18" />
+      <input type="text" name="q" />
       <input type="submit" value="Go" />
       <input type="hidden" name="check_keywords" value="yes" />
       <input type="hidden" name="area" value="default" />
@@ -101,14 +116,17 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="index.html" title="Welcome to rosjava_core’s documentation!"
+          <a href="best_practices.html" title="Best practices"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Overview"
              >previous</a> |</li>
-        <li><a href="index.html">rosjava_core v0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
+        <li><a href="index.html">rosjava_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
         &copy; Copyright 2012, Google, Inc..
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.7.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
     </div>
   </body>
 </html>
