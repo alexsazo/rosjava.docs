@@ -1,0 +1,122 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Building android_core &mdash; android_core 0.0.0-SNAPSHOT documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0-SNAPSHOT',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="android_core 0.0.0-SNAPSHOT documentation" href="index.html" />
+    <link rel="prev" title="android_core" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="index.html" title="android_core"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">android_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="building-android-core">
+<h1>Building android_core<a class="headerlink" href="#building-android-core" title="Permalink to this headline">¶</a></h1>
+<p>android_core uses the <a class="reference external" href="http://www.gradle.com/">Gradle</a> build and <a class="reference external" href="http://ant.apache.org/">Apache Ant</a> build systems.
+<a class="reference external" href="http://ros.org/wiki/rosmake/">rosmake</a> is not supported.</p>
+<p>To build android_core, execute the <a class="reference external" href="http://gradle.org/docs/current/userguide/gradle_wrapper.html">gradle wrapper</a>:</p>
+<p>Note that the build process currently involves extra steps that will be folded
+into Gradle tasks or otherwise eliminated.</p>
+<p>Before building ROS applications for Android, you must complete the
+instructions for building rosjava_core. Once you have completed that
+successfully, you may proceed as follows.</p>
+<p>For each android_core package you&#8217;re interested in (e.g. foo):</p>
+<ol class="arabic simple">
+<li>rosrun rosjava_bootstrap install_generated_modules.py foo</li>
+<li>./gradlew foo:debug</li>
+</ol>
+<p>Automatic generation of Eclipse project files is not currently supported. To
+create an Eclipse project from an existing ROS Android package:</p>
+<ol class="arabic simple">
+<li>From Eclipse, create a new Android project from existing source (your
+package directory).</li>
+<li>Add all the jars in the libs directory to your project&#8217;s build path.</li>
+</ol>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">android_core</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/building.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="index.html" title="android_core"
+             >previous</a> |</li>
+        <li><a href="index.html">android_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Google, Inc..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
