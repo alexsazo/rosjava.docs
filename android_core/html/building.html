@@ -60,13 +60,7 @@ successfully, you may proceed as follows.</p>
 <li>Install the <a class="reference external" href="http://developer.android.com/sdk/installing.html">Android SDK</a>.</li>
 <li>Install <a class="reference external" href="http://ant.apache.org/">Apache Ant</a> (e.g. on Ubuntu Lucid: <tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">ant1.8</span> <span class="pre">ant1.8-optional</span></tt>)</li>
 </ul>
-<p>Then, for each project in android_core you have to create a local.properties
-file. This will be automated in the future.</p>
-<ol class="arabic simple">
-<li>roscd android_xxx</li>
-<li>$ANDROID_SDK/tools/android update project -p `pwd`</li>
-</ol>
-<p>Finally, you can build debug APKs for all android_core packages using <a class="reference external" href="http://www.gradle.org/">Gradle</a>.</p>
+<p>You can build debug APKs for all android_core packages using <a class="reference external" href="http://www.gradle.org/">Gradle</a>.</p>
 <ol class="arabic simple">
 <li>roscd android_core</li>
 <li>./gradlew debug</li>
