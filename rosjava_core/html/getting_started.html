@@ -102,34 +102,113 @@ an executable wrapper for your package.</p>
 </div>
 <div class="section" id="creating-nodes">
 <h2>Creating nodes<a class="headerlink" href="#creating-nodes" title="Permalink to this headline">¶</a></h2>
+<p>Typically ROS nodes are synonymous with processes. In rosjava, however, nodes
+are more like <a class="reference external" href="http://ros.org/wiki/nodelets">nodelets</a> in that many nodes can run in a single
+process, the Java VM.</p>
+<p>Users, like yourself, do not create <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a>s. Instead,
+programs are defined as implementations of <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>
+which are executed by the aptly named <a class="reference external" href="javadoc/org/ros/node/NodeMainExecutor.html#">NodeMainExecutor</a>.</p>
+<p>Let&#8217;s consider the following simple <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>
+implementation:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="o">:</span><span class="nl">linenos:</span>
+
+<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">tutorials</span><span class="o">.</span><span class="na">pubsub</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.ros.concurrent.CancellableLoop</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.Node</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.NodeMain</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.topic.Publisher</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Talker</span> <span class="kd">implements</span> <span class="n">NodeMain</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">GraphName</span> <span class="nf">getDefaultNodeName</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">GraphName</span><span class="o">(</span><span class="s">&quot;rosjava_tutorial_pubsub/talker&quot;</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="kd">final</span> <span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">Publisher</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;</span> <span class="n">publisher</span> <span class="o">=</span>
+        <span class="n">node</span><span class="o">.</span><span class="na">newPublisher</span><span class="o">(</span><span class="s">&quot;chatter&quot;</span><span class="o">,</span> <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
+    <span class="c1">// This CancellableLoop will be canceled automatically when the Node shuts</span>
+    <span class="c1">// down.</span>
+    <span class="n">node</span><span class="o">.</span><span class="na">executeCancellableLoop</span><span class="o">(</span><span class="k">new</span> <span class="n">CancellableLoop</span><span class="o">()</span> <span class="o">{</span>
+      <span class="kd">private</span> <span class="kt">int</span> <span class="n">sequenceNumber</span><span class="o">;</span>
+
+      <span class="nd">@Override</span>
+      <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setup</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">sequenceNumber</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="nd">@Override</span>
+      <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">loop</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">publisher</span><span class="o">.</span><span class="na">newMessage</span><span class="o">();</span>
+        <span class="n">str</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="s">&quot;Hello world! &quot;</span> <span class="o">+</span> <span class="n">sequenceNumber</span><span class="o">);</span>
+        <span class="n">publisher</span><span class="o">.</span><span class="na">publish</span><span class="o">(</span><span class="n">str</span><span class="o">);</span>
+        <span class="n">sequenceNumber</span><span class="o">++;</span>
+        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdown</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdownComplete</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onStart(org.ros.node.Node)">NodeListener.onStart</a> method
+begins on line number 17.  As the name suggests, this is the entry point for
+your program. The <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> parameter is the factory we use
+to build things like <a class="reference external" href="javadoc/org/ros/topic/Publisher.html#">Publisher</a>s and
+<a class="reference external" href="javadoc/org/ros/topic/Subscriber.html#">Subscriber</a>s.</p>
+<p>In this example, we create a publisher for the chatter topic. That should feel
+relatively familiar if you&#8217;re a ROS veteran. The
+<a class="reference external" href="javadoc/org/ros/topic/Publisher.html#">Publisher</a> publishes <tt class="docutils literal"><span class="pre">std_msgs.String</span></tt> messages to
+the <tt class="docutils literal"><span class="pre">chatter</span></tt> topic.</p>
+<p>Line 22 will probably feel unfamailiar even to ROS veterans. This is one
+example of rosjava&#8217;s asynchornous API. The intent of our Talker class is to
+publish a hello world message to anyone who will listen once per second. One
+way to accomplish this is to publish the message and sleep in a loop. However,
+we don&#8217;t want to block the
+<a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onStart(org.ros.node.Node)">NodeListener.onStart</a> method. So, we
+create a <a class="reference external" href="javadoc/org/ros/concurrent/CancellableLoop.html#">CancellableLoop</a> and ask the
+<a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> to execute it. The loop will be interrupted
+automatically when the <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> exits.</p>
+</div>
+<div class="section" id="executing-nodes">
+<h2>Executing nodes<a class="headerlink" href="#executing-nodes" title="Permalink to this headline">¶</a></h2>
+<p>As with all ROS nodes, rosjava nodes must connect to a <a class="reference external" href="http://ros.org/wiki/Master">Master</a> in
+order to function. However, unlike other client library implementations,
+rosjava also provides its own <a class="reference external" href="javadoc/org/ros/RosCore.html#">RosCore</a> implementation. This
+enables ROS to function in a pure Java installation. For example, you can
+operate a complete ROS graph on a stock (i.e. non-rooted) Android phone.</p>
+<p>See <a class="reference external" href="javadoc/org/ros/RosRun.html#">RosRun</a> and the <tt class="docutils literal"><span class="pre">rosjava_tutorial_pubsub</span></tt> package.</p>
 </div>
 <div class="section" id="messages">
 <h2>Messages<a class="headerlink" href="#messages" title="Permalink to this headline">¶</a></h2>
-<p>To import a specific message, you must first declare a dependency on that
-message&#8217;s package in your <a class="reference external" href="http://ros.org/wiki/Manifest">Manifest</a> file and your build.gradle file.</p>
-<p>Note that this redundancy will be removed in the near future.</p>
-<p>This will add the message&#8217;s jar file to your classpath.</p>
-<p>Next, to use a message such as <a class="reference external" href="http://ros.org/doc/api/sensor_msgs/html/msg/PointCloud2.html">sensor_msgs/PointCloud2</a>, simply add an
-import.  Rather than instantiate the message directly, however, it&#8217;s preferred
-that you use a <a class="reference external" href="javadoc/org/ros/message/MessageFactory.html#">MessageFactory</a> instead. This helps
-allow the underlying message implementation to change in the future.</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span>  <span class="nn">org.ros.message.sensor_msgs.PointCloud</span><span class="o">;</span>
+<p>Messages are defined as interfaces. Since this makes it impossible to
+instantiate the message directly, it&#8217;s necessary to use a
+<a class="reference external" href="javadoc/org/ros/message/MessageFactory.html#">MessageFactory</a>. This indirection allows the
+underlying message implementation to change in the future.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Node</span> <span class="n">node</span><span class="o">;</span>
 
 <span class="o">...</span>
 
-<span class="n">Node</span> <span class="n">node</span><span class="o">;</span>
-
-<span class="o">...</span>
-
-<span class="n">PointCloud2</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">getMessageFactory</span><span class="o">()</span>
-    <span class="o">.</span><span class="na">newMessage</span><span class="o">(</span><span class="s">&quot;sensor_msgs/PointCloud&quot;</span><span class="o">);</span>
+<span class="n">PointCloud2</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">getTopicMessageFactory</span><span class="o">()</span>
+    <span class="o">.</span><span class="na">newMessage</span><span class="o">(</span><span class="n">sensor_msgs</span><span class="o">.</span><span class="na">PointCloud</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
 </pre></div>
 </div>
 <p>If you want to use messages that you define:</p>
 <ul class="simple">
 <li>create a new package for those messages (e.g. my_msgs)</li>
-<li>add a dependency on the new package as described above</li>
-<li><tt class="docutils literal"><span class="pre">rosrun</span> <span class="pre">rosjava_bootstrap</span> <span class="pre">install_generated_messages.py</span> <span class="pre">my_package</span></tt></li>
+<li>ensure that my_msgs is in your ROS_PACKAGE_PATH (see <a class="reference external" href="http://ros.org/wiki/EnvironmentVariables">EnvironmentVariables</a>)</li>
+<li>reinstall rosjava_messages (see <a class="reference internal" href="building.html"><em>Building rosjava_core</em></a>)</li>
 </ul>
 <div class="section" id="messages-as-blobs-advanced">
 <h3>Messages as BLOBs (Advanced)<a class="headerlink" href="#messages-as-blobs-advanced" title="Permalink to this headline">¶</a></h3>
@@ -145,7 +224,7 @@ little endian.</p>
 <span class="n">ByteBuffer</span> <span class="n">buffer</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">wrap</span><span class="o">(</span><span class="n">messageData</span><span class="o">);</span>
 <span class="n">buffer</span><span class="o">.</span><span class="na">order</span><span class="o">(</span><span class="n">ByteOrder</span><span class="o">.</span><span class="na">LITTLE_ENDIAN</span><span class="o">);</span>
 <span class="n">PointCloud2</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">getMessageSerializationFactory</span><span class="o">()</span>
-    <span class="o">.</span><span class="na">newMessageDeserializer</span><span class="o">(</span><span class="s">&quot;sensor_msgs/PointCloud&quot;</span><span class="o">)</span>
+    <span class="o">.</span><span class="na">newMessageDeserializer</span><span class="o">(</span><span class="n">sensor_msgs</span><span class="o">.</span><span class="na">PointCloud</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">)</span>
         <span class="o">.</span><span class="na">deserialize</span><span class="o">(</span><span class="n">buffer</span><span class="o">);</span>
 </pre></div>
 </div>
@@ -213,7 +292,7 @@ work for parameter subtrees.</p>
 <h2>Logging<a class="headerlink" href="#logging" title="Permalink to this headline">¶</a></h2>
 <p>The logging interface for rosjava is accessed through
 <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> objects via the
-<a class="reference external" href="javadoc/org/ros/node/Node.html#getLog()">Node.getLog()</a> method. This object returns an <a class="reference external" href="http://commons.apache.org/logging/commons-logging-1.1.1/apidocs/index.html">Apache
+<a class="reference external" href="javadoc/org/ros/node/Node.html#getLog()">Node.getLog</a> method. This object returns an <a class="reference external" href="http://commons.apache.org/logging/commons-logging-1.1.1/apidocs/index.html">Apache
 Commons Log</a> object which handles the debug, info, error, warning, and fatal
 logging outputs for ROS.</p>
 <div class="highlight-java"><div class="highlight"><pre><span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&quot;debug message&quot;</span><span class="o">);</span>
@@ -254,6 +333,7 @@ logging outputs for ROS.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#creating-nodes">Creating nodes</a></li>
+<li><a class="reference internal" href="#executing-nodes">Executing nodes</a></li>
 <li><a class="reference internal" href="#messages">Messages</a><ul>
 <li><a class="reference internal" href="#messages-as-blobs-advanced">Messages as BLOBs (Advanced)</a></li>
 </ul>

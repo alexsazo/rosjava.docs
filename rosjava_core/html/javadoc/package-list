@@ -16,7 +16,6 @@ org.ros.concurrent
 org.ros.exception
 org.ros.internal.loader
 org.ros.internal.message
-org.ros.internal.message.action
 org.ros.internal.message.service
 org.ros.internal.message.topic
 org.ros.internal.node
