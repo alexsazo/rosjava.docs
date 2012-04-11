@@ -183,12 +183,42 @@ automatically when the <a class="reference external" href="javadoc/org/ros/node/
 </div>
 <div class="section" id="executing-nodes">
 <h2>Executing nodes<a class="headerlink" href="#executing-nodes" title="Permalink to this headline">¶</a></h2>
+<p>When packaging your application into jar, you can use <a class="reference external" href="javadoc/org/ros/RosRun.html#">RosRun</a>
+as the main class. <a class="reference external" href="javadoc/org/ros/RosRun.html#">RosRun</a> provides a
+<a class="reference external" href="javadoc/org/ros/node/NodeMainExecutor.html#">NodeMainExecutor</a> and a command line interface that will
+be familiar to ROS veterans. For example, the following steps will build and
+execute the <a class="reference external" href="javadoc/org/ros/rosjava_tutorial_pubsub/Talker.html#">Talker</a> and
+<a class="reference external" href="javadoc/org/ros/rosjava_tutorial_pubsub/Listener.html#">Listener</a> nodes in separate
+processes:</p>
+<ol class="arabic simple">
+<li>roscd rosjava_tutorial_pubsub</li>
+<li>../gradlew installApp</li>
+<li>roscore &amp;</li>
+<li>./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Talker &amp;</li>
+<li>./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Listener</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The above example launches roscore and the Talker node in the background. You could instead launch each in a separate terminal.</p>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You may notice that rosrun cannot find the installed executable. This is a known issue that will be addressed in the future.</p>
+</div>
+<p>At this point, you should see the familiar &#8220;Hello, world!&#8221; messages start
+appearing in your terminal. You can configure the executed nodes from the
+command line in the same way you would any other ROS executable. For example,
+the following commands will remap the default topic /chatter to /foo.</p>
+<ol class="arabic simple">
+<li>./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Talker chatter:=/foo &amp;</li>
+<li>./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Listener chatter:=/foo</li>
+</ol>
+<p>See <a class="reference external" href="http://ros.org/wiki/Remapping%20Arguments">Remapping%20Arguments</a> for more information.</p>
 <p>As with all ROS nodes, rosjava nodes must connect to a <a class="reference external" href="http://ros.org/wiki/Master">Master</a> in
 order to function. However, unlike other client library implementations,
 rosjava also provides its own <a class="reference external" href="javadoc/org/ros/RosCore.html#">RosCore</a> implementation. This
 enables ROS to function in a pure Java installation. For example, you can
 operate a complete ROS graph on a stock (i.e. non-rooted) Android phone.</p>
-<p>See <a class="reference external" href="javadoc/org/ros/RosRun.html#">RosRun</a> and the <tt class="docutils literal"><span class="pre">rosjava_tutorial_pubsub</span></tt> package.</p>
 </div>
 <div class="section" id="messages">
 <h2>Messages<a class="headerlink" href="#messages" title="Permalink to this headline">¶</a></h2>
