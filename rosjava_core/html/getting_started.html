@@ -110,9 +110,54 @@ programs are defined as implementations of <a class="reference external" href="j
 which are executed by the aptly named <a class="reference external" href="javadoc/org/ros/node/NodeMainExecutor.html#">NodeMainExecutor</a>.</p>
 <p>Let&#8217;s consider the following simple <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>
 implementation:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="o">:</span><span class="nl">linenos:</span>
-
-<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">tutorials</span><span class="o">.</span><span class="na">pubsub</span><span class="o">;</span>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">tutorials</span><span class="o">.</span><span class="na">pubsub</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.ros.concurrent.CancellableLoop</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
@@ -161,7 +206,7 @@ implementation:</p>
   <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
-</div>
+</td></tr></table></div>
 <p>The <a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onStart(org.ros.node.Node)">NodeListener.onStart</a> method
 begins on line number 17.  As the name suggests, this is the entry point for
 your program. The <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> parameter is the factory we use
