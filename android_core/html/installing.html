@@ -1,0 +1,139 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installing android_core &mdash; android_core 0.0.0-SNAPSHOT documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0-SNAPSHOT',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="android_core 0.0.0-SNAPSHOT documentation" href="index.html" />
+    <link rel="next" title="Building android_core" href="building.html" />
+    <link rel="prev" title="android_core" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="building.html" title="Building android_core"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="android_core"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">android_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="installing-android-core">
+<h1>Installing android_core<a class="headerlink" href="#installing-android-core" title="Permalink to this headline">¶</a></h1>
+<p>These instructions assume that you have already completed the rosjava_core
+<a class="reference external" href="http://docs.rosjava.googlecode.com/hg/rosjava_core/html/installing.html#installing" title="(in rosjava_core v0.0.0-SNAPSHOT)"><em class="xref std std-ref">installation</em></a> and <a class="reference external" href="http://docs.rosjava.googlecode.com/hg/rosjava_core/html/building.html#building" title="(in rosjava_core v0.0.0-SNAPSHOT)"><em class="xref std std-ref">build</em></a> instructions.</p>
+<p>These instructions also assume you are using Ubuntu. However, the differences
+between platforms should be minimal.</p>
+<p>There are a few additional dependencies required for building android_core:</p>
+<ul class="simple">
+<li>the <a class="reference external" href="http://developer.android.com/sdk/installing.html">Android SDK</a> and</li>
+<li><a class="reference external" href="http://ant.apache.org/">Apache Ant</a> (e.g. on Ubuntu Lucid: <tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">ant1.8</span> <span class="pre">ant1.8-optional</span></tt>)</li>
+</ul>
+<p>As with rosjava_core, the recommend installation procedure for android_core is
+to use rosws. See the <a class="reference external" href="http://www.ros.org/doc/api/rosinstall/html/rosws_tutorial.html">rosws tutorial</a> for more information if you find the
+following quick start instructions to be insufficient.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nb">cd</span> ~/my_ros_workspace
+rosws merge http://android.rosjava.googlecode.com/hg/.rosinstall
+rosws update
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The rosws tool will remind you as well, but don&#8217;t forget to source
+the appropriate, newly generated setup script.</p>
+</div>
+<p>If you would like to build the android_core documentation, you will also need
+Pygments 1.5+.</p>
+<div class="highlight-bash"><div class="highlight"><pre>easy_install --prefix ~/.local -U pygments
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">android_core</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="building.html"
+                        title="next chapter">Building android_core</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/installing.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="building.html" title="Building android_core"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="android_core"
+             >previous</a> |</li>
+        <li><a href="index.html">android_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Google, Inc..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

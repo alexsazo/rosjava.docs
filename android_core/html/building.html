@@ -26,7 +26,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <link rel="top" title="android_core 0.0.0-SNAPSHOT documentation" href="index.html" />
-    <link rel="prev" title="android_core" href="index.html" /> 
+    <link rel="prev" title="Installing android_core" href="installing.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,7 +36,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="index.html" title="android_core"
+          <a href="installing.html" title="Installing android_core"
              accesskey="P">previous</a> |</li>
         <li><a href="index.html">android_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
       </ul>
@@ -52,20 +52,13 @@
 <p>android_core uses the <a class="reference external" href="http://www.gradle.org/">Gradle</a> build and <a class="reference external" href="http://ant.apache.org/">Apache Ant</a> build systems.
 <a class="reference external" href="http://ros.org/wiki/rosmake/">rosmake</a> is not supported.</p>
 <p>To build android_core, execute the <a class="reference external" href="http://gradle.org/docs/current/userguide/gradle_wrapper.html">gradle wrapper</a>:</p>
-<p>Before building ROS applications for Android, you must complete the
-instructions for <a class="reference external" href="http://docs.rosjava.googlecode.com/hg/rosjava_core/html/building.html">building rosjava_core</a>. Once you have completed that
-successfully, you may proceed as follows.</p>
-<p>The prerequisites for building android_core are the Android SDK and <a class="reference external" href="http://ant.apache.org/">Apache Ant</a>.</p>
-<ul class="simple">
-<li>Install the <a class="reference external" href="http://developer.android.com/sdk/installing.html">Android SDK</a>.</li>
-<li>Install <a class="reference external" href="http://ant.apache.org/">Apache Ant</a> (e.g. on Ubuntu Lucid: <tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">ant1.8</span> <span class="pre">ant1.8-optional</span></tt>)</li>
-</ul>
 <p>You can build debug APKs for all android_core packages using <a class="reference external" href="http://www.gradle.org/">Gradle</a>.</p>
-<ol class="arabic simple">
-<li>roscd android_core</li>
-<li>./gradlew debug</li>
-</ol>
-<p>At this point, you may interact with your Android projects as described in the <a class="reference external" href="http://developer.android.com/guide/developing/building/building-cmdline.html">Android documentation</a>.</p>
+<div class="highlight-bash"><div class="highlight"><pre>roscd android_core
+./gradlew debug
+</pre></div>
+</div>
+<p>At this point, you may interact with your Android projects as described in the
+<a class="reference external" href="http://developer.android.com/guide/developing/building/building-cmdline.html">Android documentation</a>.</p>
 <p>Automatic generation of Eclipse project files is not currently supported. To
 create an Eclipse project from an existing ROS Android package:</p>
 <ol class="arabic simple">
@@ -82,8 +75,8 @@ package directory).</li>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
   <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">android_core</a></p>
+  <p class="topless"><a href="installing.html"
+                        title="previous chapter">Installing android_core</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/building.txt"
@@ -113,7 +106,7 @@ package directory).</li>
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="index.html" title="android_core"
+          <a href="installing.html" title="Installing android_core"
              >previous</a> |</li>
         <li><a href="index.html">android_core 0.0.0-SNAPSHOT documentation</a> &raquo;</li> 
       </ul>
