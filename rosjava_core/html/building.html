@@ -55,14 +55,18 @@
 <h1>Building rosjava_core<a class="headerlink" href="#building-rosjava-core" title="Permalink to this headline">¶</a></h1>
 <p>rosjava_core uses the <a class="reference external" href="http://www.gradle.org/">Gradle</a> build system. <a class="reference external" href="http://ros.org/wiki/rosmake/">rosmake</a> is not supported.</p>
 <p>To build rosjava_core, execute the <a class="reference external" href="http://gradle.org/docs/current/userguide/gradle_wrapper.html">gradle wrapper</a>:</p>
-<ol class="arabic simple">
-<li>roscd rosjava_core</li>
-<li>./gradlew install</li>
-</ol>
+<div class="highlight-bash"><div class="highlight"><pre>roscd rosjava_core
+./gradlew install
+</pre></div>
+</div>
+<p>If you do not want to build the documentation, you may exclude the docs:install task:</p>
+<div class="highlight-bash"><div class="highlight"><pre>./gradlew install -x docs:install
+</pre></div>
+</div>
 <p>To generate Eclipse project files:</p>
-<ol class="arabic simple">
-<li>./gradlew eclipse</li>
-</ol>
+<div class="highlight-bash"><div class="highlight"><pre>./gradlew eclipse
+</pre></div>
+</div>
 </div>
 
 
