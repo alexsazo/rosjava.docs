@@ -106,7 +106,7 @@ an executable wrapper for your package.</p>
 <div class="section" id="creating-nodes">
 <h2>Creating nodes<a class="headerlink" href="#creating-nodes" title="Permalink to this headline">¶</a></h2>
 <p>Typically ROS nodes are synonymous with processes. In rosjava, however, nodes
-are more like <a class="reference external" href="http://ros.org/wiki/nodelets">nodelets</a> in that many nodes can run in a single
+are more like <a class="reference external" href="http://ros.org/wiki/nodelet">nodelet</a>s in that many nodes can run in a single
 process, the Java VM.</p>
 <p>Users, like yourself, do not create <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a>s. Instead,
 programs are defined as implementations of <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>
@@ -161,11 +161,11 @@ to handle clean up since it will not delay shutdown.</p>
 </div>
 <div class="section" id="publishers-and-subscribers">
 <h2>Publishers and subscribers<a class="headerlink" href="#publishers-and-subscribers" title="Permalink to this headline">¶</a></h2>
-<p>The following code is available from the rosjava_tutorial_pubsub package. In
-this example, we create a publisher for the chatter topic. That should feel
-relatively familiar if you&#8217;re a ROS veteran. The
-<a class="reference external" href="javadoc/org/ros/topic/Publisher.html#">Publisher</a> publishes <tt class="docutils literal"><span class="pre">std_msgs.String</span></tt> messages to
-the <tt class="docutils literal"><span class="pre">/chatter</span></tt> topic.</p>
+<p>The following class (<a class="reference external" href="javadoc/org/ros/rosjava_tutorial_pubsub/Talker.html#">Talker</a>) is
+available from the rosjava_tutorial_pubsub package. In this example, we create
+a publisher for the chatter topic. This should feel relatively familiar if
+you&#8217;re a ROS veteran. The <a class="reference external" href="javadoc/org/ros/topic/Publisher.html#">Publisher</a> publishes
+<tt class="docutils literal"><span class="pre">std_msgs.String</span></tt> messages to the <tt class="docutils literal"><span class="pre">/chatter</span></tt> topic.</p>
 <div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -434,7 +434,7 @@ class.</p>
 <span class="o">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>In line 43 we see another example of rosjava&#8217;s asynchornous API. We can add as
+<p>In line 42 we see another example of rosjava&#8217;s asynchornous API. We can add as
 many <a class="reference external" href="javadoc/org/ros/message/MessageListener.html#">MessageListener</a>s to our
 <a class="reference external" href="javadoc/org/ros/node/topic/Subscriber.html#">Subscriber</a> as we like. When a new message is
 received, all of our <a class="reference external" href="javadoc/org/ros/message/MessageListener.html#">MessageListener</a>s will be
@@ -475,6 +475,302 @@ the following commands will remap the default topic /chatter to /foo.</p>
 <p>See <a class="reference external" href="http://ros.org/wiki/Remapping%20Arguments">Remapping%20Arguments</a> for more information on passing arguments
 to ROS executables.</p>
 </div>
+<div class="section" id="services">
+<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<p>The following class (<a class="reference external" href="javadoc/org/ros/rosjava_tutorial_services/Server.html#">Server</a>) is
+available from the rosjava_tutorial_services package. In this example, we
+create a <a class="reference external" href="javadoc/org/ros/node/service/ServiceServer.html#">ServiceServer</a> for the
+<tt class="docutils literal"><span class="pre">test_ros.AddTwoInts</span></tt> service. This should feel relatively familiar if you&#8217;re
+a ROS veteran.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Copyright (C) 2011 Google Inc.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not</span>
+<span class="cm"> * use this file except in compliance with the License. You may obtain a copy of</span>
+<span class="cm"> * the License at</span>
+<span class="cm"> * </span>
+<span class="cm"> * http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="cm"> * </span>
+<span class="cm"> * Unless required by applicable law or agreed to in writing, software</span>
+<span class="cm"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="cm"> * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="cm"> * License for the specific language governing permissions and limitations under</span>
+<span class="cm"> * the License.</span>
+<span class="cm"> */</span>
+
+<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_services</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.Node</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.NodeMain</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.service.ServiceResponseBuilder</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.service.ServiceServer</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * This is a simple {@link ServiceServer} {@link NodeMain}.</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author damonkohler@google.com (Damon Kohler)</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Server</span> <span class="kd">implements</span> <span class="n">NodeMain</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">GraphName</span> <span class="nf">getDefaultNodeName</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">GraphName</span><span class="o">(</span><span class="s">&quot;rosjava_tutorial_services/server&quot;</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">node</span><span class="o">.</span><span class="na">newServiceServer</span><span class="o">(</span><span class="s">&quot;add_two_ints&quot;</span><span class="o">,</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">,</span>
+        <span class="k">new</span> <span class="n">ServiceResponseBuilder</span><span class="o">&lt;</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Request</span><span class="o">,</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span><span class="o">&gt;()</span> <span class="o">{</span>
+          <span class="nd">@Override</span>
+          <span class="kd">public</span> <span class="kt">void</span> <span class="nf">build</span><span class="o">(</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Request</span> <span class="n">request</span><span class="o">,</span>
+              <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">response</span><span class="o">.</span><span class="na">setSum</span><span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="na">getA</span><span class="o">()</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="na">getB</span><span class="o">());</span>
+          <span class="o">}</span>
+        <span class="o">});</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdown</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdownComplete</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>The <a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseBuilder.html#">ServiceResponseBuilder</a> is called
+asynchronously for each incoming request. On line 44 we modify the response
+output parameter to contain the sum of the two integers in the request. The
+response will be sent once the
+<a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseBuilder.html#build(T, S)">ServiceResponseBuilder.build</a> returns.</p>
+<p>Now lets take a look at the <a class="reference external" href="javadoc/org/ros/rosjava_tutorial_services/Client.html#">Client</a>
+class.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Copyright (C) 2011 Google Inc.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not</span>
+<span class="cm"> * use this file except in compliance with the License. You may obtain a copy of</span>
+<span class="cm"> * the License at</span>
+<span class="cm"> * </span>
+<span class="cm"> * http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="cm"> * </span>
+<span class="cm"> * Unless required by applicable law or agreed to in writing, software</span>
+<span class="cm"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="cm"> * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="cm"> * License for the specific language governing permissions and limitations under</span>
+<span class="cm"> * the License.</span>
+<span class="cm"> */</span>
+
+<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_services</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.ros.exception.RemoteException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.exception.RosRuntimeException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.exception.ServiceNotFoundException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.Node</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.NodeMain</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.service.ServiceClient</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.service.ServiceResponseListener</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * A simple {@link ServiceClient} {@link NodeMain}.</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author damonkohler@google.com (Damon Kohler)</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="kd">implements</span> <span class="n">NodeMain</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">GraphName</span> <span class="nf">getDefaultNodeName</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">GraphName</span><span class="o">(</span><span class="s">&quot;rosjava_tutorial_services/client&quot;</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="kd">final</span> <span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">ServiceClient</span><span class="o">&lt;</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Request</span><span class="o">,</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span><span class="o">&gt;</span> <span class="n">serviceClient</span><span class="o">;</span>
+    <span class="k">try</span> <span class="o">{</span>
+      <span class="n">serviceClient</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">newServiceClient</span><span class="o">(</span><span class="s">&quot;add_two_ints&quot;</span><span class="o">,</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
+    <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ServiceNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nf">RosRuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+    <span class="o">}</span>
+    <span class="kd">final</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="n">serviceClient</span><span class="o">.</span><span class="na">newMessage</span><span class="o">();</span>
+    <span class="n">request</span><span class="o">.</span><span class="na">setA</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+    <span class="n">request</span><span class="o">.</span><span class="na">setB</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
+    <span class="n">serviceClient</span><span class="o">.</span><span class="na">call</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="k">new</span> <span class="n">ServiceResponseListener</span><span class="o">&lt;</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span><span class="o">&gt;()</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSuccess</span><span class="o">(</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">().</span><span class="na">info</span><span class="o">(</span>
+            <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%d + %d = %d&quot;</span><span class="o">,</span> <span class="n">request</span><span class="o">.</span><span class="na">getA</span><span class="o">(),</span> <span class="n">request</span><span class="o">.</span><span class="na">getB</span><span class="o">(),</span> <span class="n">response</span><span class="o">.</span><span class="na">getSum</span><span class="o">()));</span>
+      <span class="o">}</span>
+
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onFailure</span><span class="o">(</span><span class="n">RemoteException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RosRuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdown</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdownComplete</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>In line 51 we see another example of rosjava&#8217;s asynchornous API. When the response is
+received, our <a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseListener.html#">ServiceResponseListener</a> will be
+called with the incoming response as an argument to
+<a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseListener.html#onSuccess(T)">ServiceResponseListener.onSuccess</a>.</p>
+<p>In the event that the server thows a
+<a class="reference external" href="javadoc/org/ros/exception/ServiceException.html#">ServiceException</a> while building the response,
+<a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseListener.html#onFailure(RemoteException)">ServiceResponseListener.onFailure</a>
+will be called. The <a class="reference external" href="javadoc/org/ros/exception/RemoteException.html#">RemoteException</a> will contain
+the error message from the server.</p>
+<p>Building and executing these nodes works in the same manner as described above:</p>
+<div class="highlight-bash"><div class="highlight"><pre>roscd rosjava_tutorial_services
+../gradlew installApp
+roscore &amp;
+./build/rosjava_tutorial_services/bin/rosjava_tutorial_services org.ros.rosjava_tutorial_services.Server &amp;
+./build/rosjava_tutorial_services/bin/rosjava_tutorial_services org.ros.rosjava_tutorial_services.Client
+</pre></div>
+</div>
+<p>At this point, you should see the log message &#8220;2 + 2 = 4&#8221; appear in your
+terminal.</p>
+<p>Just as before, you can configure the executed nodes from the command line in
+the same way you would any other ROS executable. See
+<a class="reference external" href="http://ros.org/wiki/Remapping%20Arguments">Remapping%20Arguments</a> for more information on passing arguments to
+ROS executables.</p>
+</div>
 <div class="section" id="messages">
 <h2>Messages<a class="headerlink" href="#messages" title="Permalink to this headline">¶</a></h2>
 <p>Messages are defined as interfaces. Since this makes it impossible to
@@ -496,10 +792,6 @@ the underlying message implementation to change in the future.</p>
 <li>ensure that my_msgs is in your ROS_PACKAGE_PATH (see <a class="reference external" href="http://ros.org/wiki/EnvironmentVariables">EnvironmentVariables</a>)</li>
 <li>reinstall rosjava_messages (see <a class="reference internal" href="building.html"><em>Building rosjava_core</em></a>)</li>
 </ul>
-</div>
-<div class="section" id="services">
-<h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
-<p>TODO</p>
 </div>
 <div class="section" id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
