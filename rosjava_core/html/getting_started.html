@@ -465,15 +465,26 @@ may notice that rosrun cannot find the installed executable. This is a known
 issue that will be addressed in the future.</p>
 </div>
 <p>At this point, you should see the familiar &#8220;Hello, world!&#8221; messages start
-appearing in your terminal. You can configure the executed nodes from the
-command line in the same way you would any other ROS executable. For example,
-the following commands will remap the default topic /chatter to /foo.</p>
+appearing in your terminal. You can also echo the topic using the
+<a class="reference external" href="http://ros.org/wiki/rostopic">rostopic</a> command line tool:</p>
+<div class="highlight-bash"><div class="highlight"><pre>rostopic <span class="nb">echo </span>chatter
+</pre></div>
+</div>
+<p>You can configure the executed nodes from the command line in the same way you
+would any other ROS executable. For example, the following commands will remap
+the default topic /chatter to /foo.</p>
 <div class="highlight-bash"><div class="highlight"><pre>./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Talker chatter:<span class="o">=</span>/foo &amp;
 ./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Listener chatter:<span class="o">=</span>/foo
 </pre></div>
 </div>
 <p>See <a class="reference external" href="http://ros.org/wiki/Remapping%20Arguments">Remapping%20Arguments</a> for more information on passing arguments
 to ROS executables.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Only the arguments described in <a class="reference external" href="http://ros.org/wiki/Remapping%20Arguments">Remapping%20Arguments</a> are
+supported. Support for arbitrary command line arguments (i.e. argv) will be
+added in the future.</p>
+</div>
 </div>
 <div class="section" id="services">
 <h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
@@ -765,7 +776,11 @@ roscore &amp;
 </pre></div>
 </div>
 <p>At this point, you should see the log message &#8220;2 + 2 = 4&#8221; appear in your
-terminal.</p>
+terminal. You can also access the service using the <a class="reference external" href="http://ros.org/wiki/rosservice">rosservice</a>
+command line tool:</p>
+<div class="highlight-bash"><div class="highlight"><pre>rosservice add_two_ints 2 2
+</pre></div>
+</div>
 <p>Just as before, you can configure the executed nodes from the command line in
 the same way you would any other ROS executable. See
 <a class="reference external" href="http://ros.org/wiki/Remapping%20Arguments">Remapping%20Arguments</a> for more information on passing arguments to
