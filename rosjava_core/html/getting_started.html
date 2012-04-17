@@ -28,6 +28,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/theme_extras.js"></script>
     <link rel="top" title="rosjava_core 0.0.0-SNAPSHOT documentation" href="index.html" />
+    <link rel="next" title="Advanced topics" href="advanced.html" />
     <link rel="prev" title="Best practices" href="best_practices.html" /> 
   </head>
   <body>
@@ -41,6 +42,8 @@
         «&#160;&#160;<a href="best_practices.html">Best practices</a>
         &#160;&#160;::&#160;&#160;
         <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="advanced.html">Advanced topics</a>&#160;&#160;»
         </p>
 
       </div>
@@ -108,8 +111,61 @@ process, the Java VM.</p>
 <p>Users, like yourself, do not create <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a>s. Instead,
 programs are defined as implementations of <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>
 which are executed by the aptly named <a class="reference external" href="javadoc/org/ros/node/NodeMainExecutor.html#">NodeMainExecutor</a>.</p>
-<p>Let&#8217;s consider the following simple <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>
+<p>Let&#8217;s consider the following mostly empty <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>
 implementation:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.Node</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.NodeMain</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyNode</span> <span class="kd">implements</span> <span class="n">NodeMain</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">GraphName</span> <span class="nf">getDefaultNodeName</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">GraphName</span><span class="o">(</span><span class="s">&quot;my_node&quot;</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdown</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdownComplete</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>The <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#getDefaultNodeName()">NodeMain.getDefaultNodeName</a> method returns the
+default name of the node. This name will be used unless a node name is
+specified in the <a class="reference external" href="javadoc/org/ros/node/NodeConfiguration.html#">NodeConfiguration</a> (more on that
+later). <a class="reference external" href="javadoc/org/ros/namespace/GraphName.html#">GraphName</a>s are used throughout rosjava
+when refering to nodes, topics, and parameters. Most methods which accept a
+<a class="reference external" href="javadoc/org/ros/namespace/GraphName.html#">GraphName</a> will also accept a string for
+convenience.</p>
+<p>The <a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onStart(org.ros.node.Node)">NodeListener.onStart</a> method is
+the entry point for your program (or node). The <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a>
+parameter is the factory we use to build things like
+<a class="reference external" href="javadoc/org/ros/topic/Publisher.html#">Publisher</a>s and <a class="reference external" href="javadoc/org/ros/topic/Subscriber.html#">Subscriber</a>s.</p>
+<p>The <a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onShutdown(org.ros.node.Node)">NodeListener.onShutdown</a> method is
+the first exit point for your program. It will be executed as soon as shutdown
+is started (i.e. before all publishers, subscribers, etc. have been shutdown).
+The shutdown of all created publishers, subscribers, etc. will be delayed until
+this method returns or the shutdown timeout expires.</p>
+<p>The <a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onShutdownComplete(org.ros.node.Node)">NodeListener.onShutdownComplete</a>
+method is the final exit point for your program. It will be executed after all
+publishers, subscribers, etc. have been shutdown. This is the preferred place
+to handle clean up since it will not delay shutdown.</p>
+</div>
+<div class="section" id="publishers-and-subscribers">
+<h2>Publishers and subscribers<a class="headerlink" href="#publishers-and-subscribers" title="Permalink to this headline">¶</a></h2>
+<p>The following code is available from the rosjava_tutorial_pubsub package. In
+this example, we create a publisher for the chatter topic. That should feel
+relatively familiar if you&#8217;re a ROS veteran. The
+<a class="reference external" href="javadoc/org/ros/topic/Publisher.html#">Publisher</a> publishes <tt class="docutils literal"><span class="pre">std_msgs.String</span></tt> messages to
+the <tt class="docutils literal"><span class="pre">/chatter</span></tt> topic.</p>
 <div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
  2
  3
@@ -157,7 +213,44 @@ implementation:</p>
 45
 46
 47
-48</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">tutorials</span><span class="o">.</span><span class="na">pubsub</span><span class="o">;</span>
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Copyright (C) 2011 Google Inc.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not</span>
+<span class="cm"> * use this file except in compliance with the License. You may obtain a copy of</span>
+<span class="cm"> * the License at</span>
+<span class="cm"> * </span>
+<span class="cm"> * http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="cm"> * </span>
+<span class="cm"> * Unless required by applicable law or agreed to in writing, software</span>
+<span class="cm"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="cm"> * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="cm"> * License for the specific language governing permissions and limitations under</span>
+<span class="cm"> * the License.</span>
+<span class="cm"> */</span>
+
+<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_pubsub</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.ros.concurrent.CancellableLoop</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
@@ -165,6 +258,11 @@ implementation:</p>
 <span class="kn">import</span> <span class="nn">org.ros.node.NodeMain</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.topic.Publisher</span><span class="o">;</span>
 
+<span class="cm">/**</span>
+<span class="cm"> * A simple {@link Publisher} {@link NodeMain}.</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author damonkohler@google.com (Damon Kohler)</span>
+<span class="cm"> */</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Talker</span> <span class="kd">implements</span> <span class="n">NodeMain</span> <span class="o">{</span>
 
   <span class="nd">@Override</span>
@@ -207,24 +305,141 @@ implementation:</p>
 <span class="o">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>The <a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onStart(org.ros.node.Node)">NodeListener.onStart</a> method
-begins on line number 17.  As the name suggests, this is the entry point for
-your program. The <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> parameter is the factory we use
-to build things like <a class="reference external" href="javadoc/org/ros/topic/Publisher.html#">Publisher</a>s and
-<a class="reference external" href="javadoc/org/ros/topic/Subscriber.html#">Subscriber</a>s.</p>
-<p>In this example, we create a publisher for the chatter topic. That should feel
-relatively familiar if you&#8217;re a ROS veteran. The
-<a class="reference external" href="javadoc/org/ros/topic/Publisher.html#">Publisher</a> publishes <tt class="docutils literal"><span class="pre">std_msgs.String</span></tt> messages to
-the <tt class="docutils literal"><span class="pre">chatter</span></tt> topic.</p>
-<p>Line 22 will probably feel unfamailiar even to ROS veterans. This is one
-example of rosjava&#8217;s asynchornous API. The intent of our Talker class is to
-publish a hello world message to anyone who will listen once per second. One
-way to accomplish this is to publish the message and sleep in a loop. However,
-we don&#8217;t want to block the
-<a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onStart(org.ros.node.Node)">NodeListener.onStart</a> method. So, we
-create a <a class="reference external" href="javadoc/org/ros/concurrent/CancellableLoop.html#">CancellableLoop</a> and ask the
-<a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> to execute it. The loop will be interrupted
+<p>Line 43 will probably feel unfamailiar even to ROS veterans. This is one
+example of rosjava&#8217;s asynchornous API. The intent of our
+<a class="reference external" href="javadoc/org/ros/rosjava_tutorial_pubsub/Talker.html#">Talker</a> class is to publish a hello
+world message to anyone who will listen once per second. One way to accomplish
+this is to publish the message and sleep in a loop. However, we don&#8217;t want to
+block the <a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onStart(org.ros.node.Node)">NodeListener.onStart</a>
+method. So, we create a <a class="reference external" href="javadoc/org/ros/concurrent/CancellableLoop.html#">CancellableLoop</a> and ask
+the <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> to execute it. The loop will be interrupted
 automatically when the <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> exits.</p>
+<p>On line 53 we create a new <tt class="docutils literal"><span class="pre">std_msgs.String</span></tt> message to publish using the
+<a class="reference external" href="javadoc/org/ros/node/topic/Publisher.html#newMessage()">Publisher.newMessage</a> method. Messages in
+rosjava cannot be instantiated directly. More on that later.</p>
+<p>Now lets take a look at the <a class="reference external" href="javadoc/org/ros/rosjava_tutorial_pubsub/Listener.html#">Listener</a>
+class.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Copyright (C) 2011 Google Inc.</span>
+<span class="cm"> * </span>
+<span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not</span>
+<span class="cm"> * use this file except in compliance with the License. You may obtain a copy of</span>
+<span class="cm"> * the License at</span>
+<span class="cm"> * </span>
+<span class="cm"> * http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="cm"> * </span>
+<span class="cm"> * Unless required by applicable law or agreed to in writing, software</span>
+<span class="cm"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="cm"> * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="cm"> * License for the specific language governing permissions and limitations under</span>
+<span class="cm"> * the License.</span>
+<span class="cm"> */</span>
+
+<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_pubsub</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.apache.commons.logging.Log</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.message.MessageListener</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.Node</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.NodeMain</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.topic.Subscriber</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * A simple {@link Subscriber} {@link NodeMain}.</span>
+<span class="cm"> * </span>
+<span class="cm"> * @author damonkohler@google.com (Damon Kohler)</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Listener</span> <span class="kd">implements</span> <span class="n">NodeMain</span> <span class="o">{</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="n">GraphName</span> <span class="nf">getDefaultNodeName</span><span class="o">()</span> <span class="o">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="nf">GraphName</span><span class="o">(</span><span class="s">&quot;rosjava_tutorial_pubsub/listener&quot;</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">Log</span> <span class="n">log</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">();</span>
+    <span class="n">Subscriber</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;</span> <span class="n">subscriber</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">newSubscriber</span><span class="o">(</span><span class="s">&quot;chatter&quot;</span><span class="o">,</span> <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
+    <span class="n">subscriber</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">MessageListener</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onNewMessage</span><span class="o">(</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;I heard: \&quot;&quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="na">getData</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;\&quot;&quot;</span><span class="o">);</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdown</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdownComplete</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>In line 43 we see another example of rosjava&#8217;s asynchornous API. We can add as
+many <a class="reference external" href="javadoc/org/ros/message/MessageListener.html#">MessageListener</a>s to our
+<a class="reference external" href="javadoc/org/ros/node/topic/Subscriber.html#">Subscriber</a> as we like. When a new message is
+received, all of our <a class="reference external" href="javadoc/org/ros/message/MessageListener.html#">MessageListener</a>s will be
+called with the incoming message as an argument to
+<a class="reference external" href="javadoc/org/ros/message/MessageListener.html#onNewMessage(T)">MessageListener.onNewMessage</a>.</p>
 </div>
 <div class="section" id="executing-nodes">
 <h2>Executing nodes<a class="headerlink" href="#executing-nodes" title="Permalink to this headline">¶</a></h2>
@@ -235,42 +450,38 @@ be familiar to ROS veterans. For example, the following steps will build and
 execute the <a class="reference external" href="javadoc/org/ros/rosjava_tutorial_pubsub/Talker.html#">Talker</a> and
 <a class="reference external" href="javadoc/org/ros/rosjava_tutorial_pubsub/Listener.html#">Listener</a> nodes in separate
 processes:</p>
-<ol class="arabic simple">
-<li>roscd rosjava_tutorial_pubsub</li>
-<li>../gradlew installApp</li>
-<li>roscore &amp;</li>
-<li>./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Talker &amp;</li>
-<li>./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Listener</li>
-</ol>
-<div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">The above example launches roscore and the Talker node in the background. You could instead launch each in a separate terminal.</p>
+<div class="highlight-bash"><div class="highlight"><pre>roscd rosjava_tutorial_pubsub
+../gradlew installApp
+roscore &amp;
+./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Talker &amp;
+./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Listener
+</pre></div>
 </div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p class="last">You may notice that rosrun cannot find the installed executable. This is a known issue that will be addressed in the future.</p>
+<p class="last">The above example launches roscore and the Talker node in the
+background. You could instead launch each in a separate terminal. Also, you
+may notice that rosrun cannot find the installed executable. This is a known
+issue that will be addressed in the future.</p>
 </div>
 <p>At this point, you should see the familiar &#8220;Hello, world!&#8221; messages start
 appearing in your terminal. You can configure the executed nodes from the
 command line in the same way you would any other ROS executable. For example,
 the following commands will remap the default topic /chatter to /foo.</p>
-<ol class="arabic simple">
-<li>./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Talker chatter:=/foo &amp;</li>
-<li>./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Listener chatter:=/foo</li>
-</ol>
-<p>See <a class="reference external" href="http://ros.org/wiki/Remapping%20Arguments">Remapping%20Arguments</a> for more information.</p>
-<p>As with all ROS nodes, rosjava nodes must connect to a <a class="reference external" href="http://ros.org/wiki/Master">Master</a> in
-order to function. However, unlike other client library implementations,
-rosjava also provides its own <a class="reference external" href="javadoc/org/ros/RosCore.html#">RosCore</a> implementation. This
-enables ROS to function in a pure Java installation. For example, you can
-operate a complete ROS graph on a stock (i.e. non-rooted) Android phone.</p>
+<div class="highlight-bash"><div class="highlight"><pre>./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Talker chatter:<span class="o">=</span>/foo &amp;
+./build/rosjava_tutorial_pubsub/bin/rosjava_tutorial_pubsub org.ros.rosjava_tutorial_pubsub.Listener chatter:<span class="o">=</span>/foo
+</pre></div>
+</div>
+<p>See <a class="reference external" href="http://ros.org/wiki/Remapping%20Arguments">Remapping%20Arguments</a> for more information on passing arguments
+to ROS executables.</p>
 </div>
 <div class="section" id="messages">
 <h2>Messages<a class="headerlink" href="#messages" title="Permalink to this headline">¶</a></h2>
 <p>Messages are defined as interfaces. Since this makes it impossible to
 instantiate the message directly, it&#8217;s necessary to use a
-<a class="reference external" href="javadoc/org/ros/message/MessageFactory.html#">MessageFactory</a>. This indirection allows the
-underlying message implementation to change in the future.</p>
+<a class="reference external" href="javadoc/org/ros/message/MessageFactory.html#">MessageFactory</a> or helper methods such as
+<a class="reference external" href="javadoc/org/ros/node/topic/Publisher.html#newMessage()">Publisher.newMessage</a>. This indirection allows
+the underlying message implementation to change in the future.</p>
 <div class="highlight-java"><div class="highlight"><pre><span class="n">Node</span> <span class="n">node</span><span class="o">;</span>
 
 <span class="o">...</span>
@@ -285,31 +496,10 @@ underlying message implementation to change in the future.</p>
 <li>ensure that my_msgs is in your ROS_PACKAGE_PATH (see <a class="reference external" href="http://ros.org/wiki/EnvironmentVariables">EnvironmentVariables</a>)</li>
 <li>reinstall rosjava_messages (see <a class="reference internal" href="building.html"><em>Building rosjava_core</em></a>)</li>
 </ul>
-<div class="section" id="messages-as-blobs-advanced">
-<h3>Messages as BLOBs (Advanced)<a class="headerlink" href="#messages-as-blobs-advanced" title="Permalink to this headline">¶</a></h3>
-<p>If you need to deserialize a ROS message BLOB, it is important to remember that
-Java is a big endian virtual machine. When supplying the <tt class="docutils literal"><span class="pre">ByteBuffer</span></tt> to the
-<a class="reference external" href="javadoc/org/ros/message/MessageDeserializer.html#">MessageDeserializer</a>, make sure that order is set to
-little endian.</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="n">Node</span> <span class="n">node</span><span class="o">;</span>
-<span class="kt">byte</span><span class="o">[]</span> <span class="n">messageData</span><span class="o">;</span>
-
-<span class="o">...</span>
-
-<span class="n">ByteBuffer</span> <span class="n">buffer</span> <span class="o">=</span> <span class="n">ByteBuffer</span><span class="o">.</span><span class="na">wrap</span><span class="o">(</span><span class="n">messageData</span><span class="o">);</span>
-<span class="n">buffer</span><span class="o">.</span><span class="na">order</span><span class="o">(</span><span class="n">ByteOrder</span><span class="o">.</span><span class="na">LITTLE_ENDIAN</span><span class="o">);</span>
-<span class="n">PointCloud2</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">getMessageSerializationFactory</span><span class="o">()</span>
-    <span class="o">.</span><span class="na">newMessageDeserializer</span><span class="o">(</span><span class="n">sensor_msgs</span><span class="o">.</span><span class="na">PointCloud</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">)</span>
-        <span class="o">.</span><span class="na">deserialize</span><span class="o">(</span><span class="n">buffer</span><span class="o">);</span>
-</pre></div>
-</div>
-</div>
-</div>
-<div class="section" id="publishers-and-subscribers">
-<h2>Publishers and subscribers<a class="headerlink" href="#publishers-and-subscribers" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="services">
 <h2>Services<a class="headerlink" href="#services" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
 </div>
 <div class="section" id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>
@@ -360,7 +550,8 @@ work for parameter subtrees.</p>
 <span class="o">});</span>
 </pre></div>
 </div>
-<p>Currently, ParameterListeners are not generic. Instead, you are responsible for casting value appropriately.</p>
+<p>Currently, ParameterListeners are not generic. Instead, you are responsible for
+casting the value appropriately.</p>
 </div>
 </div>
 <div class="section" id="logging">
@@ -375,22 +566,16 @@ logging outputs for ROS.</p>
 
 <span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;warning message&quot;</span><span class="o">);</span>
 
-<span class="c1">//report an error message</span>
+<span class="c1">// report an error message</span>
 <span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&quot;error message&quot;</span><span class="o">);</span>
 
-<span class="c1">//error message with an exception</span>
-<span class="c1">//so that it can print the stack trace</span>
+<span class="c1">// error message with an exception</span>
+<span class="c1">// so that it can print the stack trace</span>
 <span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&quot;error message&quot;</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
 
 <span class="n">node</span><span class="o">.</span><span class="na">fatal</span><span class="o">(</span><span class="s">&quot;message informing user of a fatal occurrence&quot;</span><span class="o">);</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="exceptions">
-<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="running-nodes">
-<h2>Running nodes<a class="headerlink" href="#running-nodes" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -402,6 +587,8 @@ logging outputs for ROS.</p>
         «&#160;&#160;<a href="best_practices.html">Best practices</a>
         &#160;&#160;::&#160;&#160;
         <a class="uplink" href="index.html">Contents</a>
+        &#160;&#160;::&#160;&#160;
+        <a href="advanced.html">Advanced topics</a>&#160;&#160;»
         </p>
 
       </div>

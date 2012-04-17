@@ -30,4 +30,5 @@ org.ros.node.service
 org.ros.node.topic
 org.ros.rosjava_geometry
 org.ros.rosjava_tutorial_pubsub
+org.ros.rosjava_tutorial_services
 org.ros.time
