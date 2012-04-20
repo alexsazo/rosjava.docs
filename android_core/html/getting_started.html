@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Getting started &mdash; android_core 0.0.0-SNAPSHOT documentation</title>
+    
+    <link rel="stylesheet" href="_static/haiku.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/print.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.0-SNAPSHOT',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/theme_extras.js"></script>
+    <link rel="top" title="android_core 0.0.0-SNAPSHOT documentation" href="index.html" />
+    <link rel="prev" title="Building android_core" href="building.html" /> 
+  </head>
+  <body>
+      <div class="header"><h1 class="heading"><a href="index.html">
+          <span>android_core 0.0.0-SNAPSHOT documentation</span></a></h1>
+        <h2 class="heading"><span>Getting started</span></h2>
+      </div>
+      <div class="topnav">
+      
+        <p>
+        «&#160;&#160;<a href="building.html">Building android_core</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+      <div class="content">
+        
+        
+  <div class="section" id="getting-started">
+<h1>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>Before diving into ROS enabled Android application development, you should be
+familiar with <a class="reference external" href="http://docs.rosjava.googlecode.com/hg/rosjava_core/html/getting_started.html#getting-started" title="(in rosjava_core v0.0.0-SNAPSHOT)"><em class="xref std std-ref">rosjava</em></a> and <a class="reference external" href="http://developer.android.com/resources/tutorials/hello-world.html">Android
+application development</a> in general.</p>
+<div class="section" id="creating-a-new-android-application">
+<h2>Creating a new Android application<a class="headerlink" href="#creating-a-new-android-application" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+</div>
+<div class="section" id="life-of-a-rosactivity">
+<h2>Life of a RosActivity<a class="headerlink" href="#life-of-a-rosactivity" title="Permalink to this headline">¶</a></h2>
+<p>The <a class="reference external" href="javadoc/org/ros/android/RosActivity.html#">RosActivity</a> class is the base class for all of
+your ROS enabled Android applications. Let&#8217;s consider the following example
+from the android_tutorial_pubsub package. In this example, we create a
+<a class="reference external" href="javadoc/org/ros/node/topic/Publisher.html#">Publisher</a> and a
+<a class="reference external" href="javadoc/org/ros/node/topic/Subscriber.html#">Subscriber</a> that will exchange &#8220;Hello, World&#8221;
+messages.</p>
+<div class="highlight-java"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
+<span class="cm"> * Copyright (C) 2011 Google Inc.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not</span>
+<span class="cm"> * use this file except in compliance with the License. You may obtain a copy of</span>
+<span class="cm"> * the License at</span>
+<span class="cm"> *</span>
+<span class="cm"> * http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="cm"> *</span>
+<span class="cm"> * Unless required by applicable law or agreed to in writing, software</span>
+<span class="cm"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
+<span class="cm"> * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
+<span class="cm"> * License for the specific language governing permissions and limitations under</span>
+<span class="cm"> * the License.</span>
+<span class="cm"> */</span>
+
+<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">android</span><span class="o">.</span><span class="na">android_tutorial_pubsub</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">android.os.Bundle</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.android.MessageCallable</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.android.RosActivity</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.android.view.RosTextView</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.NodeConfiguration</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.NodeMainExecutor</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.rosjava_tutorial_pubsub.Talker</span><span class="o">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @author damonkohler@google.com (Damon Kohler)</span>
+<span class="cm"> */</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MainActivity</span> <span class="kd">extends</span> <span class="n">RosActivity</span> <span class="o">{</span>
+
+  <span class="kd">private</span> <span class="n">RosTextView</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;</span> <span class="n">rosTextView</span><span class="o">;</span>
+  <span class="kd">private</span> <span class="n">Talker</span> <span class="n">talker</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="nf">MainActivity</span><span class="o">()</span> <span class="o">{</span>
+    <span class="c1">// The RosActivity constructor configures the notification title and ticker</span>
+    <span class="c1">// messages.</span>
+    <span class="kd">super</span><span class="o">(</span><span class="s">&quot;Pubsub Tutorial&quot;</span><span class="o">,</span> <span class="s">&quot;Pubsub Tutorial&quot;</span><span class="o">);</span>
+  <span class="o">}</span>
+
+  <span class="nd">@SuppressWarnings</span><span class="o">(</span><span class="s">&quot;unchecked&quot;</span><span class="o">)</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onCreate</span><span class="o">(</span><span class="n">Bundle</span> <span class="n">savedInstanceState</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">super</span><span class="o">.</span><span class="na">onCreate</span><span class="o">(</span><span class="n">savedInstanceState</span><span class="o">);</span>
+    <span class="n">setContentView</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">layout</span><span class="o">.</span><span class="na">main</span><span class="o">);</span>
+    <span class="n">rosTextView</span> <span class="o">=</span> <span class="o">(</span><span class="n">RosTextView</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;)</span> <span class="n">findViewById</span><span class="o">(</span><span class="n">R</span><span class="o">.</span><span class="na">id</span><span class="o">.</span><span class="na">text</span><span class="o">);</span>
+    <span class="n">rosTextView</span><span class="o">.</span><span class="na">setTopicName</span><span class="o">(</span><span class="s">&quot;chatter&quot;</span><span class="o">);</span>
+    <span class="n">rosTextView</span><span class="o">.</span><span class="na">setMessageType</span><span class="o">(</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
+    <span class="n">rosTextView</span><span class="o">.</span><span class="na">setMessageToStringCallable</span><span class="o">(</span><span class="k">new</span> <span class="n">MessageCallable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="n">String</span> <span class="nf">call</span><span class="o">(</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">message</span><span class="o">.</span><span class="na">getData</span><span class="o">();</span>
+      <span class="o">}</span>
+    <span class="o">});</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">(</span><span class="n">NodeMainExecutor</span> <span class="n">nodeMainExecutor</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">talker</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Talker</span><span class="o">();</span>
+    <span class="n">NodeConfiguration</span> <span class="n">nodeConfiguration</span> <span class="o">=</span> <span class="n">NodeConfiguration</span><span class="o">.</span><span class="na">newPrivate</span><span class="o">();</span>
+    <span class="c1">// At this point, the user has already been prompted to either enter the URI</span>
+    <span class="c1">// of a master to use or to start a master locally.</span>
+    <span class="n">nodeConfiguration</span><span class="o">.</span><span class="na">setMasterUri</span><span class="o">(</span><span class="n">getMasterUri</span><span class="o">());</span>
+    <span class="n">nodeMainExecutor</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">talker</span><span class="o">,</span> <span class="n">nodeConfiguration</span><span class="o">);</span>
+    <span class="c1">// The RosTextView is also a NodeMain that must be executed in order to</span>
+    <span class="c1">// start displaying incoming messages.</span>
+    <span class="n">nodeMainExecutor</span><span class="o">.</span><span class="na">execute</span><span class="o">(</span><span class="n">rosTextView</span><span class="o">,</span> <span class="n">nodeConfiguration</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</td></tr></table></div>
+<p>On line 30, we extend <a class="reference external" href="javadoc/org/ros/android/RosActivity.html#">RosActivity</a>.  When our
+<a class="reference external" href="http://developer.android.com/reference/android/app/Activity.html">activity</a> starts, the <a class="reference external" href="javadoc/org/ros/android/RosActivity.html#">RosActivity</a> super class will:</p>
+<ul class="simple">
+<li>start the <a class="reference external" href="javadoc/org/ros/android/NodeMainExecutorService.html#">NodeMainExecutorService</a> as a <a class="reference external" href="http://developer.android.com/reference/android/app/Service.html">service</a>
+in the <a class="reference external" href="http://developer.android.com/reference/android/app/Service.html#startForeground(int,android.app.Notification)">foreground</a>,</li>
+<li>launch the <a class="reference external" href="javadoc/org/ros/android/MasterChooser.html#">MasterChooser</a> activity to prompt the
+user to configure a master URI,</li>
+<li>and display an ongoing <a class="reference external" href="http://developer.android.com/reference/android/app/Notification.html">notification</a> informing the user that ROS nodes are
+running in the background.</li>
+</ul>
+<p>On line 38 we call the super constructor with two strings that become the title
+and ticker message of an Android <a class="reference external" href="http://developer.android.com/reference/android/app/Notification.html">notification</a>. The user may tap on the
+notification to shut down all ROS nodes associated with the application.</p>
+<p>Lines 42-46 should look familiar to Android developers. We load the <a class="reference external" href="http://developer.android.com/reference/android/app/Activity.html">activity</a>
+layout and get a reference to our
+<a class="reference external" href="javadoc/org/ros/android/view/RosTextView&lt;T&gt;.html#">RosTextView&lt;T&gt;</a>. More on that later.</p>
+<p>On line 58 we define the abstract method
+<a class="reference external" href="javadoc/org/ros/android/RosActivity.html#init(org.ros.node.NodeMainExecutor)">RosActivity.init</a>.
+This is where we kick off our <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>s and other
+business logic.</p>
+<p>And that&#8217;s it. <a class="reference external" href="javadoc/org/ros/android/RosActivity.html#">RosActivity</a> handles the rest of the
+application&#8217;s lifecycle management including:</p>
+<ul class="simple">
+<li>acquiring and releasing <a class="reference external" href="http://developer.android.com/reference/android/os/PowerManager.html">wake and WiFi locks</a>,</li>
+<li>binding and unbinding the <a class="reference external" href="http://developer.android.com/reference/android/app/Service.html">service</a>,</li>
+<li>and shutting down <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>s when the application exits.</li>
+</ul>
+</div>
+<div class="section" id="nodes-and-views">
+<h2>Nodes and Views<a class="headerlink" href="#nodes-and-views" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
+</div>
+</div>
+
+
+      </div>
+      <div class="bottomnav">
+      
+        <p>
+        «&#160;&#160;<a href="building.html">Building android_core</a>
+        &#160;&#160;::&#160;&#160;
+        <a class="uplink" href="index.html">Contents</a>
+        </p>
+
+      </div>
+
+    <div class="footer">
+        &copy; Copyright 2012, Google, Inc..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
