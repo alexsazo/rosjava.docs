@@ -218,39 +218,7 @@ you&#8217;re a ROS veteran. The <a class="reference external" href="javadoc/org/
 50
 51
 52
-53
-54
-55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
-<span class="cm"> * Copyright (C) 2011 Google Inc.</span>
-<span class="cm"> * </span>
-<span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not</span>
-<span class="cm"> * use this file except in compliance with the License. You may obtain a copy of</span>
-<span class="cm"> * the License at</span>
-<span class="cm"> * </span>
-<span class="cm"> * http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="cm"> * </span>
-<span class="cm"> * Unless required by applicable law or agreed to in writing, software</span>
-<span class="cm"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
-<span class="cm"> * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
-<span class="cm"> * License for the specific language governing permissions and limitations under</span>
-<span class="cm"> * the License.</span>
-<span class="cm"> */</span>
-
-<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_pubsub</span><span class="o">;</span>
+53</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_pubsub</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.ros.concurrent.CancellableLoop</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
@@ -276,8 +244,8 @@ you&#8217;re a ROS veteran. The <a class="reference external" href="javadoc/org/
         <span class="n">node</span><span class="o">.</span><span class="na">newPublisher</span><span class="o">(</span><span class="s">&quot;chatter&quot;</span><span class="o">,</span> <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
     <span class="c1">// This CancellableLoop will be canceled automatically when the Node shuts</span>
     <span class="c1">// down.</span>
-    <span class="n">node</span><span class="o">.</span><span class="na">executeCancellableLoop</span><span class="o">(</span><span class="k">new</span> <span class="n">CancellableLoop</span><span class="o">()</span> <span class="o">{</span>
-      <span class="kd">private</span> <span class="kt">int</span> <span class="n">sequenceNumber</span><span class="o">;</span>
+<span class="hll">    <span class="n">node</span><span class="o">.</span><span class="na">executeCancellableLoop</span><span class="o">(</span><span class="k">new</span> <span class="n">CancellableLoop</span><span class="o">()</span> <span class="o">{</span>
+</span>      <span class="kd">private</span> <span class="kt">int</span> <span class="n">sequenceNumber</span><span class="o">;</span>
 
       <span class="nd">@Override</span>
       <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setup</span><span class="o">()</span> <span class="o">{</span>
@@ -286,8 +254,8 @@ you&#8217;re a ROS veteran. The <a class="reference external" href="javadoc/org/
 
       <span class="nd">@Override</span>
       <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">loop</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-        <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">publisher</span><span class="o">.</span><span class="na">newMessage</span><span class="o">();</span>
-        <span class="n">str</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="s">&quot;Hello world! &quot;</span> <span class="o">+</span> <span class="n">sequenceNumber</span><span class="o">);</span>
+<span class="hll">        <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">publisher</span><span class="o">.</span><span class="na">newMessage</span><span class="o">();</span>
+</span>        <span class="n">str</span><span class="o">.</span><span class="na">setData</span><span class="o">(</span><span class="s">&quot;Hello world! &quot;</span> <span class="o">+</span> <span class="n">sequenceNumber</span><span class="o">);</span>
         <span class="n">publisher</span><span class="o">.</span><span class="na">publish</span><span class="o">(</span><span class="n">str</span><span class="o">);</span>
         <span class="n">sequenceNumber</span><span class="o">++;</span>
         <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="mi">1000</span><span class="o">);</span>
@@ -305,7 +273,7 @@ you&#8217;re a ROS veteran. The <a class="reference external" href="javadoc/org/
 <span class="o">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>Line 43 will probably feel unfamailiar even to ROS veterans. This is one
+<p>Line 27 will probably feel unfamailiar even to ROS veterans. This is one
 example of rosjava&#8217;s asynchornous API. The intent of our
 <a class="reference external" href="javadoc/org/ros/rosjava_tutorial_pubsub/Talker.html#">Talker</a> class is to publish a hello
 world message to anyone who will listen once per second. One way to accomplish
@@ -314,7 +282,7 @@ block the <a class="reference external" href="javadoc/org/ros/node/NodeListener.
 method. So, we create a <a class="reference external" href="javadoc/org/ros/concurrent/CancellableLoop.html#">CancellableLoop</a> and ask
 the <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> to execute it. The loop will be interrupted
 automatically when the <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> exits.</p>
-<p>On line 53 we create a new <tt class="docutils literal"><span class="pre">std_msgs.String</span></tt> message to publish using the
+<p>On line 37 we create a new <tt class="docutils literal"><span class="pre">std_msgs.String</span></tt> message to publish using the
 <a class="reference external" href="javadoc/org/ros/node/topic/Publisher.html#newMessage()">Publisher.newMessage</a> method. Messages in
 rosjava cannot be instantiated directly. More on that later.</p>
 <p>Now lets take a look at the <a class="reference external" href="javadoc/org/ros/rosjava_tutorial_pubsub/Listener.html#">Listener</a>
@@ -359,39 +327,7 @@ class.</p>
 38
 39
 40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56
-57</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
-<span class="cm"> * Copyright (C) 2011 Google Inc.</span>
-<span class="cm"> * </span>
-<span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not</span>
-<span class="cm"> * use this file except in compliance with the License. You may obtain a copy of</span>
-<span class="cm"> * the License at</span>
-<span class="cm"> * </span>
-<span class="cm"> * http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="cm"> * </span>
-<span class="cm"> * Unless required by applicable law or agreed to in writing, software</span>
-<span class="cm"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
-<span class="cm"> * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
-<span class="cm"> * License for the specific language governing permissions and limitations under</span>
-<span class="cm"> * the License.</span>
-<span class="cm"> */</span>
-
-<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_pubsub</span><span class="o">;</span>
+41</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_pubsub</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.apache.commons.logging.Log</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.message.MessageListener</span><span class="o">;</span>
@@ -416,8 +352,8 @@ class.</p>
   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
     <span class="kd">final</span> <span class="n">Log</span> <span class="n">log</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">();</span>
     <span class="n">Subscriber</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;</span> <span class="n">subscriber</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">newSubscriber</span><span class="o">(</span><span class="s">&quot;chatter&quot;</span><span class="o">,</span> <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
-    <span class="n">subscriber</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">MessageListener</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;()</span> <span class="o">{</span>
-      <span class="nd">@Override</span>
+<span class="hll">    <span class="n">subscriber</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">MessageListener</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span>      <span class="nd">@Override</span>
       <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onNewMessage</span><span class="o">(</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
         <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;I heard: \&quot;&quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="na">getData</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;\&quot;&quot;</span><span class="o">);</span>
       <span class="o">}</span>
@@ -434,7 +370,7 @@ class.</p>
 <span class="o">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>In line 42 we see another example of rosjava&#8217;s asynchornous API. We can add as
+<p>In line 26 we see another example of rosjava&#8217;s asynchornous API. We can add as
 many <a class="reference external" href="javadoc/org/ros/message/MessageListener.html#">MessageListener</a>s to our
 <a class="reference external" href="javadoc/org/ros/node/topic/Subscriber.html#">Subscriber</a> as we like. When a new message is
 received, all of our <a class="reference external" href="javadoc/org/ros/message/MessageListener.html#">MessageListener</a>s will be
@@ -532,39 +468,7 @@ a ROS veteran.</p>
 37
 38
 39
-40
-41
-42
-43
-44
-45
-46
-47
-48
-49
-50
-51
-52
-53
-54
-55
-56</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
-<span class="cm"> * Copyright (C) 2011 Google Inc.</span>
-<span class="cm"> * </span>
-<span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not</span>
-<span class="cm"> * use this file except in compliance with the License. You may obtain a copy of</span>
-<span class="cm"> * the License at</span>
-<span class="cm"> * </span>
-<span class="cm"> * http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="cm"> * </span>
-<span class="cm"> * Unless required by applicable law or agreed to in writing, software</span>
-<span class="cm"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
-<span class="cm"> * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
-<span class="cm"> * License for the specific language governing permissions and limitations under</span>
-<span class="cm"> * the License.</span>
-<span class="cm"> */</span>
-
-<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_services</span><span class="o">;</span>
+40</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_services</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.Node</span><span class="o">;</span>
@@ -591,8 +495,8 @@ a ROS veteran.</p>
           <span class="nd">@Override</span>
           <span class="kd">public</span> <span class="kt">void</span> <span class="nf">build</span><span class="o">(</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Request</span> <span class="n">request</span><span class="o">,</span>
               <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">response</span><span class="o">.</span><span class="na">setSum</span><span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="na">getA</span><span class="o">()</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="na">getB</span><span class="o">());</span>
-          <span class="o">}</span>
+<span class="hll">            <span class="n">response</span><span class="o">.</span><span class="na">setSum</span><span class="o">(</span><span class="n">request</span><span class="o">.</span><span class="na">getA</span><span class="o">()</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="na">getB</span><span class="o">());</span>
+</span>          <span class="o">}</span>
         <span class="o">});</span>
   <span class="o">}</span>
 
@@ -607,7 +511,7 @@ a ROS veteran.</p>
 </pre></div>
 </td></tr></table></div>
 <p>The <a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseBuilder.html#">ServiceResponseBuilder</a> is called
-asynchronously for each incoming request. On line 44 we modify the response
+asynchronously for each incoming request. On line 28 we modify the response
 output parameter to contain the sum of the two integers in the request. The
 response will be sent once the
 <a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseBuilder.html#build(T, S)">ServiceResponseBuilder.build</a> returns.</p>
@@ -668,39 +572,7 @@ class.</p>
 53
 54
 55
-56
-57
-58
-59
-60
-61
-62
-63
-64
-65
-66
-67
-68
-69
-70
-71
-72</pre></div></td><td class="code"><div class="highlight"><pre><span class="cm">/*</span>
-<span class="cm"> * Copyright (C) 2011 Google Inc.</span>
-<span class="cm"> * </span>
-<span class="cm"> * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;); you may not</span>
-<span class="cm"> * use this file except in compliance with the License. You may obtain a copy of</span>
-<span class="cm"> * the License at</span>
-<span class="cm"> * </span>
-<span class="cm"> * http://www.apache.org/licenses/LICENSE-2.0</span>
-<span class="cm"> * </span>
-<span class="cm"> * Unless required by applicable law or agreed to in writing, software</span>
-<span class="cm"> * distributed under the License is distributed on an &quot;AS IS&quot; BASIS, WITHOUT</span>
-<span class="cm"> * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the</span>
-<span class="cm"> * License for the specific language governing permissions and limitations under</span>
-<span class="cm"> * the License.</span>
-<span class="cm"> */</span>
-
-<span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_services</span><span class="o">;</span>
+56</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_services</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.ros.exception.RemoteException</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.exception.RosRuntimeException</span><span class="o">;</span>
@@ -734,19 +606,19 @@ class.</p>
     <span class="kd">final</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Request</span> <span class="n">request</span> <span class="o">=</span> <span class="n">serviceClient</span><span class="o">.</span><span class="na">newMessage</span><span class="o">();</span>
     <span class="n">request</span><span class="o">.</span><span class="na">setA</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
     <span class="n">request</span><span class="o">.</span><span class="na">setB</span><span class="o">(</span><span class="mi">2</span><span class="o">);</span>
-    <span class="n">serviceClient</span><span class="o">.</span><span class="na">call</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="k">new</span> <span class="n">ServiceResponseListener</span><span class="o">&lt;</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span><span class="o">&gt;()</span> <span class="o">{</span>
-      <span class="nd">@Override</span>
-      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSuccess</span><span class="o">(</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">().</span><span class="na">info</span><span class="o">(</span>
-            <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%d + %d = %d&quot;</span><span class="o">,</span> <span class="n">request</span><span class="o">.</span><span class="na">getA</span><span class="o">(),</span> <span class="n">request</span><span class="o">.</span><span class="na">getB</span><span class="o">(),</span> <span class="n">response</span><span class="o">.</span><span class="na">getSum</span><span class="o">()));</span>
-      <span class="o">}</span>
-
-      <span class="nd">@Override</span>
-      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onFailure</span><span class="o">(</span><span class="n">RemoteException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RosRuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
-      <span class="o">}</span>
-    <span class="o">});</span>
-  <span class="o">}</span>
+<span class="hll">    <span class="n">serviceClient</span><span class="o">.</span><span class="na">call</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="k">new</span> <span class="n">ServiceResponseListener</span><span class="o">&lt;</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span><span class="o">&gt;()</span> <span class="o">{</span>
+</span><span class="hll">      <span class="nd">@Override</span>
+</span><span class="hll">      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSuccess</span><span class="o">(</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="hll">        <span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">().</span><span class="na">info</span><span class="o">(</span>
+</span><span class="hll">            <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%d + %d = %d&quot;</span><span class="o">,</span> <span class="n">request</span><span class="o">.</span><span class="na">getA</span><span class="o">(),</span> <span class="n">request</span><span class="o">.</span><span class="na">getB</span><span class="o">(),</span> <span class="n">response</span><span class="o">.</span><span class="na">getSum</span><span class="o">()));</span>
+</span><span class="hll">      <span class="o">}</span>
+</span><span class="hll">
+</span><span class="hll">      <span class="nd">@Override</span>
+</span><span class="hll">      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onFailure</span><span class="o">(</span><span class="n">RemoteException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="hll">        <span class="k">throw</span> <span class="k">new</span> <span class="nf">RosRuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+</span><span class="hll">      <span class="o">}</span>
+</span><span class="hll">    <span class="o">});</span>
+</span>  <span class="o">}</span>
 
   <span class="nd">@Override</span>
   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdown</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
@@ -758,12 +630,13 @@ class.</p>
 <span class="o">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>In line 51 we see another example of rosjava&#8217;s asynchornous API. When the response is
-received, our <a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseListener.html#">ServiceResponseListener</a> will be
-called with the incoming response as an argument to
-<a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseListener.html#onSuccess(T)">ServiceResponseListener.onSuccess</a>.</p>
-<p>In the event that the server thows a
-<a class="reference external" href="javadoc/org/ros/exception/ServiceException.html#">ServiceException</a> while building the response,
+<p>On lines 35-46 we see another example of rosjava&#8217;s asynchornous API. When the
+response is received, our
+<a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseListener.html#">ServiceResponseListener</a> will be called with the
+incoming response as an argument to
+<a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseListener.html#onSuccess(T)">ServiceResponseListener.onSuccess</a>. In the
+event that the server thows a <a class="reference external" href="javadoc/org/ros/exception/ServiceException.html#">ServiceException</a>
+while building the response,
 <a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseListener.html#onFailure(RemoteException)">ServiceResponseListener.onFailure</a>
 will be called. The <a class="reference external" href="javadoc/org/ros/exception/RemoteException.html#">RemoteException</a> will contain
 the error message from the server.</p>
