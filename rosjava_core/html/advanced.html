@@ -49,6 +49,29 @@
         
   <div class="section" id="advanced-topics">
 <h1>Advanced topics<a class="headerlink" href="#advanced-topics" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="listeners">
+<h2>Listeners<a class="headerlink" href="#listeners" title="Permalink to this headline">¶</a></h2>
+<p>Because rosjava provides a primarily asynchronous API, many classes which allow
+you to provide event listeners. For example,
+<a class="reference external" href="javadoc/org/ros/node/topic/PublisherListener.html#">PublisherListener</a>s allow you to react to
+lifecycle events of a <a class="reference external" href="javadoc/org/ros/node/topic/Publisher.html#">Publisher</a>. The snippet
+below adds a <a class="reference external" href="javadoc/org/ros/node/topic/PublisherListener.html#">PublisherListener</a> that will log a
+warning message if the <a class="reference external" href="javadoc/org/ros/node/topic/Publisher.html#">Publisher</a> fails to
+register with the master.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Node</span> <span class="n">node</span><span class="o">;</span>
+<span class="n">Publisher</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;</span> <span class="n">publisher</span><span class="o">;</span>
+
+<span class="o">...</span>
+
+<span class="n">publisher</span><span class="o">.</span><span class="na">addListener</span><span class="o">(</span><span class="k">new</span> <span class="n">DefaultPublisherListener</span><span class="o">()</span> <span class="o">{</span>
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onMasterRegistrationFailure</span><span class="o">(</span><span class="n">Publisher</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;</span> <span class="n">registrant</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">().</span><span class="na">warn</span><span class="o">(</span><span class="s">&quot;Publisher failed to register: &quot;</span> <span class="o">+</span> <span class="n">registrant</span><span class="o">);</span>
+  <span class="o">}</span>
+<span class="o">});</span>
+</pre></div>
+</div>
+</div>
 <div class="section" id="messages-as-blobs">
 <h2>Messages as BLOBs<a class="headerlink" href="#messages-as-blobs" title="Permalink to this headline">¶</a></h2>
 <p>If you need to deserialize a ROS message BLOB, it is important to remember that
