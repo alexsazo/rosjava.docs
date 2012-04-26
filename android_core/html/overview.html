@@ -58,16 +58,42 @@ APIs and documentation to be volatile.</p>
 this documentation.</p>
 <div class="section" id="ros-enabling-android-applications">
 <h2>ROS-enabling Android applications<a class="headerlink" href="#ros-enabling-android-applications" title="Permalink to this headline">¶</a></h2>
-<p>android_core provides a base <a class="reference external" href="http://developer.android.com/reference/android/app/Activity.html">Activity</a>
-(<a class="reference external" href="javadoc/org/ros/android/RosActivity.html#">RosActivity</a>) and <a class="reference external" href="http://developer.android.com/reference/android/app/Service.html">Service</a>
-(<a class="reference external" href="javadoc/org/ros/android/NodeMainExecutorService.html#">NodeMainExecutorService</a>) for executing
+<p>android_core provides <a class="reference external" href="http://developer.android.com/guide/developing/projects/index.html#LibraryProjects">Android Library Projects</a> to help you write ROS
+applications for Android. The library projects are named for the <a class="reference external" href="http://developer.android.com/guide/appendix/api-levels.html">Android API
+level</a> they require (e.g. android_gingerbread and android_honeycomb_mr2).
+Each class or feature is defined in the library project that represents the
+minimum version of Android required for it to work.</p>
+<p>Your application can depend on multiple library projects. This allows you to
+easily target your application for different API levels.</p>
+<p>Beyond specific features, android_core defines the pattern of combining the
+Android <a class="reference external" href="http://developer.android.com/reference/android/view/View.html">View</a> and <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a> concepts to enable the
+development of data driven Android UIs (e.g.
+<a class="reference external" href="javadoc/org/ros/android/view/RosTextView.html#">RosTextView</a>).</p>
+</div>
+<div class="section" id="android-gingerbread-library-project">
+<h2>android_gingerbread library project<a class="headerlink" href="#android-gingerbread-library-project" title="Permalink to this headline">¶</a></h2>
+<p>android_gingerbread (API level 9) is the lowest API level supported. It
+provides the base <a class="reference external" href="http://developer.android.com/reference/android/app/Activity.html">Activity</a> (<a class="reference external" href="javadoc/org/ros/android/RosActivity.html#">RosActivity</a>) and
+<a class="reference external" href="http://developer.android.com/reference/android/app/Service.html">Service</a> (<a class="reference external" href="javadoc/org/ros/android/NodeMainExecutorService.html#">NodeMainExecutorService</a>) for executing
 and managing the lifecycle of your <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>s.</p>
-<p>In addition, android_core defines the pattern of combining the Android
-<a class="reference external" href="http://developer.android.com/reference/android/view/View.html">View</a> and <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a> concepts to enable the
-development of data driven Android UIs. Several such RosViews (e.g.
-<a class="reference external" href="javadoc/org/ros/android/view/RosTextView.html#">RosTextView</a>,
-<a class="reference external" href="javadoc/org/ros/android/view/RosImageView.html#">RosImageView</a>, and
-<a class="reference external" href="javadoc/org/ros/android/view/RosCameraPreviewView.html#">RosCameraPreviewView</a>) are provided.</p>
+<p>A few of the other features provided include:</p>
+<ul class="simple">
+<li>camera publisher</li>
+<li>image view</li>
+<li>orientation publisher</li>
+</ul>
+</div>
+<div class="section" id="android-honeycomb-mr2-library-project">
+<h2>android_honeycomb_mr2 library project<a class="headerlink" href="#android-honeycomb-mr2-library-project" title="Permalink to this headline">¶</a></h2>
+<p>android_honeycomb_mr2 (API level 13) provides features that require multitouch
+and other APIs that are only available in devices with Android Honeycomb MR2 or
+higher.</p>
+<p>A few of the features provided include:</p>
+<ul class="simple">
+<li>2D mapping and navigation</li>
+<li>2D laser scan visualization</li>
+<li>virtual joystick</li>
+</ul>
 </div>
 </div>
 
