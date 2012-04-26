@@ -51,13 +51,16 @@
         
         
   <div class="section" id="building-android-core">
-<h1>Building android_core<a class="headerlink" href="#building-android-core" title="Permalink to this headline">¶</a></h1>
+<span id="building"></span><h1>Building android_core<a class="headerlink" href="#building-android-core" title="Permalink to this headline">¶</a></h1>
 <p>android_core uses the <a class="reference external" href="http://www.gradle.org/">Gradle</a> build and <a class="reference external" href="http://ant.apache.org/">Apache Ant</a> build systems.
 <a class="reference external" href="http://ros.org/wiki/rosmake/">rosmake</a> is not supported.</p>
-<p>To build android_core, execute the <a class="reference external" href="http://gradle.org/docs/current/userguide/gradle_wrapper.html">gradle wrapper</a>:</p>
-<p>You can build debug APKs for all android_core packages using <a class="reference external" href="http://www.gradle.org/">Gradle</a>.</p>
+<p>To build debug APKs for all android_core packages, execute the <a class="reference external" href="http://gradle.org/docs/current/userguide/gradle_wrapper.html">gradle wrapper</a>.</p>
 <div class="highlight-bash"><div class="highlight"><pre>roscd android_core
 ./gradlew debug
+</pre></div>
+</div>
+<p>To build the documentation, you may execute the docs task:</p>
+<div class="highlight-bash"><div class="highlight"><pre>./gradlew docs
 </pre></div>
 </div>
 <p>At this point, you may interact with your Android projects as described in the

@@ -1,17 +1,23 @@
+.. _building:
+
 Building android_core
 =====================
 
 android_core uses the `Gradle`_ build and `Apache Ant`_ build systems.
 `rosmake`_ is not supported.
 
-To build android_core, execute the `gradle wrapper`_:
-
-You can build debug APKs for all android_core packages using `Gradle`_.
+To build debug APKs for all android_core packages, execute the `gradle wrapper`_.
 
 .. code-block:: bash
 
   roscd android_core
   ./gradlew debug
+
+To build the documentation, you may execute the docs task:
+
+.. code-block:: bash
+
+  ./gradlew docs
 
 At this point, you may interact with your Android projects as described in the
 `Android documentation`_.

@@ -125,7 +125,7 @@ implementation:</p>
   <span class="o">}</span>
 
   <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">ConnectedNode</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
   <span class="o">}</span>
 
   <span class="nd">@Override</span>
@@ -134,6 +134,10 @@ implementation:</p>
 
   <span class="nd">@Override</span>
   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdownComplete</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onError</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">{</span>
   <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
@@ -145,10 +149,11 @@ later). <a class="reference external" href="javadoc/org/ros/namespace/GraphName.
 when refering to nodes, topics, and parameters. Most methods which accept a
 <a class="reference external" href="javadoc/org/ros/namespace/GraphName.html#">GraphName</a> will also accept a string for
 convenience.</p>
-<p>The <a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onStart(org.ros.node.Node)">NodeListener.onStart</a> method is
-the entry point for your program (or node). The <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a>
-parameter is the factory we use to build things like
-<a class="reference external" href="javadoc/org/ros/topic/Publisher.html#">Publisher</a>s and <a class="reference external" href="javadoc/org/ros/topic/Subscriber.html#">Subscriber</a>s.</p>
+<p>The <a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onStart(org.ros.node.ConnectedNode)">NodeListener.onStart</a>
+method is the entry point for your program (or node). The
+<a class="reference external" href="javadoc/org/ros/node/ConnectedNode.html#">ConnectedNode</a> parameter is the factory we use to build
+things like <a class="reference external" href="javadoc/org/ros/topic/Publisher.html#">Publisher</a>s and
+<a class="reference external" href="javadoc/org/ros/topic/Subscriber.html#">Subscriber</a>s.</p>
 <p>The <a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onShutdown(org.ros.node.Node)">NodeListener.onShutdown</a> method is
 the first exit point for your program. It will be executed as soon as shutdown
 is started (i.e. before all publishers, subscribers, etc. have been shutdown).
@@ -158,6 +163,12 @@ this method returns or the shutdown timeout expires.</p>
 method is the final exit point for your program. It will be executed after all
 publishers, subscribers, etc. have been shutdown. This is the preferred place
 to handle clean up since it will not delay shutdown.</p>
+<p>The <a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onError(org.ros.node.Node, java.lang.Throwable)">NodeListener.onError</a> method is called when an error occurs in the
+<a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> itself. These errors are typically fatal.  The
+<a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onShutdown(org.ros.node.Node)">NodeListener.onShutdown</a> and
+<a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onShutdownComplete(org.ros.node.Node)">NodeListener.onShutdownComplete</a>
+methods will be called following the call to
+<a class="reference external" href="javadoc/org/ros/node/NodeListener.html#onError(org.ros.node.Node, java.lang.Throwable)">NodeListener.onError</a>.</p>
 </div>
 <div class="section" id="publishers-and-subscribers">
 <h2>Publishers and subscribers<a class="headerlink" href="#publishers-and-subscribers" title="Permalink to this headline">¶</a></h2>
@@ -211,18 +222,12 @@ you&#8217;re a ROS veteran. The <a class="reference external" href="javadoc/org/
 43
 44
 45
-46
-47
-48
-49
-50
-51
-52
-53</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_pubsub</span><span class="o">;</span>
+46</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_pubsub</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.ros.concurrent.CancellableLoop</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.ros.node.Node</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.AbstractNodeMain</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.ConnectedNode</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.NodeMain</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.topic.Publisher</span><span class="o">;</span>
 
@@ -231,7 +236,7 @@ you&#8217;re a ROS veteran. The <a class="reference external" href="javadoc/org/
 <span class="cm"> * </span>
 <span class="cm"> * @author damonkohler@google.com (Damon Kohler)</span>
 <span class="cm"> */</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Talker</span> <span class="kd">implements</span> <span class="n">NodeMain</span> <span class="o">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Talker</span> <span class="kd">extends</span> <span class="n">AbstractNodeMain</span> <span class="o">{</span>
 
   <span class="nd">@Override</span>
   <span class="kd">public</span> <span class="n">GraphName</span> <span class="nf">getDefaultNodeName</span><span class="o">()</span> <span class="o">{</span>
@@ -239,12 +244,12 @@ you&#8217;re a ROS veteran. The <a class="reference external" href="javadoc/org/
   <span class="o">}</span>
 
   <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="kd">final</span> <span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="kd">final</span> <span class="n">ConnectedNode</span> <span class="n">connectedNode</span><span class="o">)</span> <span class="o">{</span>
     <span class="kd">final</span> <span class="n">Publisher</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;</span> <span class="n">publisher</span> <span class="o">=</span>
-        <span class="n">node</span><span class="o">.</span><span class="na">newPublisher</span><span class="o">(</span><span class="s">&quot;chatter&quot;</span><span class="o">,</span> <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
-    <span class="c1">// This CancellableLoop will be canceled automatically when the Node shuts</span>
+        <span class="n">connectedNode</span><span class="o">.</span><span class="na">newPublisher</span><span class="o">(</span><span class="s">&quot;chatter&quot;</span><span class="o">,</span> <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
+    <span class="c1">// This CancellableLoop will be canceled automatically when the node shuts</span>
     <span class="c1">// down.</span>
-<span class="hll">    <span class="n">node</span><span class="o">.</span><span class="na">executeCancellableLoop</span><span class="o">(</span><span class="k">new</span> <span class="n">CancellableLoop</span><span class="o">()</span> <span class="o">{</span>
+<span class="hll">    <span class="n">connectedNode</span><span class="o">.</span><span class="na">executeCancellableLoop</span><span class="o">(</span><span class="k">new</span> <span class="n">CancellableLoop</span><span class="o">()</span> <span class="o">{</span>
 </span>      <span class="kd">private</span> <span class="kt">int</span> <span class="n">sequenceNumber</span><span class="o">;</span>
 
       <span class="nd">@Override</span>
@@ -262,18 +267,10 @@ you&#8217;re a ROS veteran. The <a class="reference external" href="javadoc/org/
       <span class="o">}</span>
     <span class="o">});</span>
   <span class="o">}</span>
-
-  <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdown</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-  <span class="o">}</span>
-
-  <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdownComplete</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-  <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>Line 27 will probably feel unfamailiar even to ROS veterans. This is one
+<p>Line 28 will probably feel unfamailiar even to ROS veterans. This is one
 example of rosjava&#8217;s asynchornous API. The intent of our
 <a class="reference external" href="javadoc/org/ros/rosjava_tutorial_pubsub/Talker.html#">Talker</a> class is to publish a hello
 world message to anyone who will listen once per second. One way to accomplish
@@ -282,7 +279,7 @@ block the <a class="reference external" href="javadoc/org/ros/node/NodeListener.
 method. So, we create a <a class="reference external" href="javadoc/org/ros/concurrent/CancellableLoop.html#">CancellableLoop</a> and ask
 the <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> to execute it. The loop will be interrupted
 automatically when the <a class="reference external" href="javadoc/org/ros/node/Node.html#">Node</a> exits.</p>
-<p>On line 37 we create a new <tt class="docutils literal"><span class="pre">std_msgs.String</span></tt> message to publish using the
+<p>On line 38 we create a new <tt class="docutils literal"><span class="pre">std_msgs.String</span></tt> message to publish using the
 <a class="reference external" href="javadoc/org/ros/node/topic/Publisher.html#newMessage()">Publisher.newMessage</a> method. Messages in
 rosjava cannot be instantiated directly. More on that later.</p>
 <p>Now lets take a look at the <a class="reference external" href="javadoc/org/ros/rosjava_tutorial_pubsub/Listener.html#">Listener</a>
@@ -320,19 +317,13 @@ class.</p>
 31
 32
 33
-34
-35
-36
-37
-38
-39
-40
-41</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_pubsub</span><span class="o">;</span>
+34</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_pubsub</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.apache.commons.logging.Log</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.message.MessageListener</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.ros.node.Node</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.AbstractNodeMain</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.ConnectedNode</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.NodeMain</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.topic.Subscriber</span><span class="o">;</span>
 
@@ -341,7 +332,7 @@ class.</p>
 <span class="cm"> * </span>
 <span class="cm"> * @author damonkohler@google.com (Damon Kohler)</span>
 <span class="cm"> */</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Listener</span> <span class="kd">implements</span> <span class="n">NodeMain</span> <span class="o">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Listener</span> <span class="kd">extends</span> <span class="n">AbstractNodeMain</span> <span class="o">{</span>
 
   <span class="nd">@Override</span>
   <span class="kd">public</span> <span class="n">GraphName</span> <span class="nf">getDefaultNodeName</span><span class="o">()</span> <span class="o">{</span>
@@ -349,29 +340,21 @@ class.</p>
   <span class="o">}</span>
 
   <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-    <span class="kd">final</span> <span class="n">Log</span> <span class="n">log</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">();</span>
-    <span class="n">Subscriber</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;</span> <span class="n">subscriber</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">newSubscriber</span><span class="o">(</span><span class="s">&quot;chatter&quot;</span><span class="o">,</span> <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">ConnectedNode</span> <span class="n">connectedNode</span><span class="o">)</span> <span class="o">{</span>
+    <span class="kd">final</span> <span class="n">Log</span> <span class="n">log</span> <span class="o">=</span> <span class="n">connectedNode</span><span class="o">.</span><span class="na">getLog</span><span class="o">();</span>
+    <span class="n">Subscriber</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;</span> <span class="n">subscriber</span> <span class="o">=</span> <span class="n">connectedNode</span><span class="o">.</span><span class="na">newSubscriber</span><span class="o">(</span><span class="s">&quot;chatter&quot;</span><span class="o">,</span> <span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
 <span class="hll">    <span class="n">subscriber</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">MessageListener</span><span class="o">&lt;</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span><span class="o">&gt;()</span> <span class="o">{</span>
-</span>      <span class="nd">@Override</span>
-      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onNewMessage</span><span class="o">(</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;I heard: \&quot;&quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="na">getData</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;\&quot;&quot;</span><span class="o">);</span>
-      <span class="o">}</span>
-    <span class="o">});</span>
-  <span class="o">}</span>
-
-  <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdown</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-  <span class="o">}</span>
-
-  <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdownComplete</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-  <span class="o">}</span>
+</span><span class="hll">      <span class="nd">@Override</span>
+</span><span class="hll">      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onNewMessage</span><span class="o">(</span><span class="n">std_msgs</span><span class="o">.</span><span class="na">String</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
+</span><span class="hll">        <span class="n">log</span><span class="o">.</span><span class="na">info</span><span class="o">(</span><span class="s">&quot;I heard: \&quot;&quot;</span> <span class="o">+</span> <span class="n">message</span><span class="o">.</span><span class="na">getData</span><span class="o">()</span> <span class="o">+</span> <span class="s">&quot;\&quot;&quot;</span><span class="o">);</span>
+</span><span class="hll">      <span class="o">}</span>
+</span><span class="hll">    <span class="o">});</span>
+</span>  <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>In line 26 we see another example of rosjava&#8217;s asynchornous API. We can add as
-many <a class="reference external" href="javadoc/org/ros/message/MessageListener.html#">MessageListener</a>s to our
+<p>In lines 27-32 we see another example of rosjava&#8217;s asynchornous API. We can add
+as many <a class="reference external" href="javadoc/org/ros/message/MessageListener.html#">MessageListener</a>s to our
 <a class="reference external" href="javadoc/org/ros/node/topic/Subscriber.html#">Subscriber</a> as we like. When a new message is
 received, all of our <a class="reference external" href="javadoc/org/ros/message/MessageListener.html#">MessageListener</a>s will be
 called with the incoming message as an argument to
@@ -461,17 +444,11 @@ a ROS veteran.</p>
 30
 31
 32
-33
-34
-35
-36
-37
-38
-39
-40</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_services</span><span class="o">;</span>
+33</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_services</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.ros.node.Node</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.AbstractNodeMain</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.ConnectedNode</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.NodeMain</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.service.ServiceResponseBuilder</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.service.ServiceServer</span><span class="o">;</span>
@@ -481,7 +458,7 @@ a ROS veteran.</p>
 <span class="cm"> * </span>
 <span class="cm"> * @author damonkohler@google.com (Damon Kohler)</span>
 <span class="cm"> */</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Server</span> <span class="kd">implements</span> <span class="n">NodeMain</span> <span class="o">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Server</span> <span class="kd">extends</span> <span class="n">AbstractNodeMain</span> <span class="o">{</span>
 
   <span class="nd">@Override</span>
   <span class="kd">public</span> <span class="n">GraphName</span> <span class="nf">getDefaultNodeName</span><span class="o">()</span> <span class="o">{</span>
@@ -489,8 +466,8 @@ a ROS veteran.</p>
   <span class="o">}</span>
 
   <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-    <span class="n">node</span><span class="o">.</span><span class="na">newServiceServer</span><span class="o">(</span><span class="s">&quot;add_two_ints&quot;</span><span class="o">,</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">,</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">ConnectedNode</span> <span class="n">connectedNode</span><span class="o">)</span> <span class="o">{</span>
+    <span class="n">connectedNode</span><span class="o">.</span><span class="na">newServiceServer</span><span class="o">(</span><span class="s">&quot;add_two_ints&quot;</span><span class="o">,</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">,</span>
         <span class="k">new</span> <span class="n">ServiceResponseBuilder</span><span class="o">&lt;</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Request</span><span class="o">,</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span><span class="o">&gt;()</span> <span class="o">{</span>
           <span class="nd">@Override</span>
           <span class="kd">public</span> <span class="kt">void</span> <span class="nf">build</span><span class="o">(</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Request</span> <span class="n">request</span><span class="o">,</span>
@@ -499,19 +476,11 @@ a ROS veteran.</p>
 </span>          <span class="o">}</span>
         <span class="o">});</span>
   <span class="o">}</span>
-
-  <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdown</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-  <span class="o">}</span>
-
-  <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdownComplete</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-  <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
 </td></tr></table></div>
 <p>The <a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseBuilder.html#">ServiceResponseBuilder</a> is called
-asynchronously for each incoming request. On line 28 we modify the response
+asynchronously for each incoming request. On line 29 we modify the response
 output parameter to contain the sum of the two integers in the request. The
 response will be sent once the
 <a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseBuilder.html#build(T, S)">ServiceResponseBuilder.build</a> returns.</p>
@@ -565,20 +534,14 @@ class.</p>
 46
 47
 48
-49
-50
-51
-52
-53
-54
-55
-56</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_services</span><span class="o">;</span>
+49</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">rosjava_tutorial_services</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">org.ros.exception.RemoteException</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.exception.RosRuntimeException</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.exception.ServiceNotFoundException</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">org.ros.node.Node</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.AbstractNodeMain</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.ConnectedNode</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.NodeMain</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.service.ServiceClient</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.service.ServiceResponseListener</span><span class="o">;</span>
@@ -588,7 +551,7 @@ class.</p>
 <span class="cm"> * </span>
 <span class="cm"> * @author damonkohler@google.com (Damon Kohler)</span>
 <span class="cm"> */</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="kd">implements</span> <span class="n">NodeMain</span> <span class="o">{</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="kd">extends</span> <span class="n">AbstractNodeMain</span> <span class="o">{</span>
 
   <span class="nd">@Override</span>
   <span class="kd">public</span> <span class="n">GraphName</span> <span class="nf">getDefaultNodeName</span><span class="o">()</span> <span class="o">{</span>
@@ -596,10 +559,10 @@ class.</p>
   <span class="o">}</span>
 
   <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="kd">final</span> <span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="kd">final</span> <span class="n">ConnectedNode</span> <span class="n">connectedNode</span><span class="o">)</span> <span class="o">{</span>
     <span class="n">ServiceClient</span><span class="o">&lt;</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Request</span><span class="o">,</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span><span class="o">&gt;</span> <span class="n">serviceClient</span><span class="o">;</span>
     <span class="k">try</span> <span class="o">{</span>
-      <span class="n">serviceClient</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">newServiceClient</span><span class="o">(</span><span class="s">&quot;add_two_ints&quot;</span><span class="o">,</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
+      <span class="n">serviceClient</span> <span class="o">=</span> <span class="n">connectedNode</span><span class="o">.</span><span class="na">newServiceClient</span><span class="o">(</span><span class="s">&quot;add_two_ints&quot;</span><span class="o">,</span> <span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">_TYPE</span><span class="o">);</span>
     <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">ServiceNotFoundException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
       <span class="k">throw</span> <span class="k">new</span> <span class="nf">RosRuntimeException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
     <span class="o">}</span>
@@ -609,7 +572,7 @@ class.</p>
 <span class="hll">    <span class="n">serviceClient</span><span class="o">.</span><span class="na">call</span><span class="o">(</span><span class="n">request</span><span class="o">,</span> <span class="k">new</span> <span class="n">ServiceResponseListener</span><span class="o">&lt;</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span><span class="o">&gt;()</span> <span class="o">{</span>
 </span><span class="hll">      <span class="nd">@Override</span>
 </span><span class="hll">      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onSuccess</span><span class="o">(</span><span class="n">test_ros</span><span class="o">.</span><span class="na">AddTwoInts</span><span class="o">.</span><span class="na">Response</span> <span class="n">response</span><span class="o">)</span> <span class="o">{</span>
-</span><span class="hll">        <span class="n">node</span><span class="o">.</span><span class="na">getLog</span><span class="o">().</span><span class="na">info</span><span class="o">(</span>
+</span><span class="hll">        <span class="n">connectedNode</span><span class="o">.</span><span class="na">getLog</span><span class="o">().</span><span class="na">info</span><span class="o">(</span>
 </span><span class="hll">            <span class="n">String</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&quot;%d + %d = %d&quot;</span><span class="o">,</span> <span class="n">request</span><span class="o">.</span><span class="na">getA</span><span class="o">(),</span> <span class="n">request</span><span class="o">.</span><span class="na">getB</span><span class="o">(),</span> <span class="n">response</span><span class="o">.</span><span class="na">getSum</span><span class="o">()));</span>
 </span><span class="hll">      <span class="o">}</span>
 </span><span class="hll">
@@ -619,18 +582,10 @@ class.</p>
 </span><span class="hll">      <span class="o">}</span>
 </span><span class="hll">    <span class="o">});</span>
 </span>  <span class="o">}</span>
-
-  <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdown</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-  <span class="o">}</span>
-
-  <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdownComplete</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-  <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
 </td></tr></table></div>
-<p>On lines 35-46 we see another example of rosjava&#8217;s asynchornous API. When the
+<p>In lines 36-47 we see another example of rosjava&#8217;s asynchornous API. When the
 response is received, our
 <a class="reference external" href="javadoc/org/ros/node/service/ServiceResponseListener.html#">ServiceResponseListener</a> will be called with the
 incoming response as an argument to
@@ -680,6 +635,10 @@ the underlying message implementation to change in the future.</p>
 <li>ensure that my_msgs is in your ROS_PACKAGE_PATH (see <a class="reference external" href="http://ros.org/wiki/EnvironmentVariables">EnvironmentVariables</a>)</li>
 <li>reinstall rosjava_messages (see <a class="reference internal" href="building.html"><em>Building rosjava_core</em></a>)</li>
 </ul>
+<div class="highlight-bash"><div class="highlight"><pre>roscd rosjava_messages
+../gradlew install
+</pre></div>
+</div>
 </div>
 <div class="section" id="parameters">
 <h2>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h2>

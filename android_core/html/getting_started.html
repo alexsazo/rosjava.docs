@@ -71,9 +71,27 @@ cp -a android_tutorial_pubsub my_package
 ./gradlew my_package:clean my_package:debug
 </pre></div>
 </div>
+<p>At this point, you may interact with your Android projects as described in the
+<a class="reference external" href="http://developer.android.com/guide/developing/building/building-cmdline.html">Android documentation</a>. Please start there if the following quick start
+instructions are insufficient for you.</p>
+<p>Use <a class="reference external" href="http://ant.apache.org/">Apache Ant</a> to install your new Android application:</p>
+<div class="highlight-bash"><div class="highlight"><pre>roscd my_package
+ant installd
+</pre></div>
 </div>
-<div class="section" id="life-of-a-rosactivity">
-<span id="id2"></span><h2>Life of a RosActivity<a class="headerlink" href="#life-of-a-rosactivity" title="Permalink to this headline">¶</a></h2>
+<p>You can also use ant to build the application. However, if you add, remove, or
+modify a dependency in the build.gradle file, you will need to execute the
+<a class="reference external" href="http://gradle.org/docs/current/userguide/gradle_wrapper.html">gradle wrapper</a> as described above in order to update the Android
+application&#8217;s external dependencies (located in the <tt class="docutils literal"><span class="pre">my_package/libs</span></tt>
+directory).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You may also build and run your application from Eclipse. For more
+information, see <a class="reference internal" href="building.html"><em>Building android_core</em></a>.</p>
+</div>
+</div>
+<div class="section" id="using-rosactivity">
+<span id="life-of-a-rosactivity"></span><h2>Using RosActivity<a class="headerlink" href="#using-rosactivity" title="Permalink to this headline">¶</a></h2>
 <p>The <a class="reference external" href="javadoc/org/ros/android/RosActivity.html#">RosActivity</a> class is the base class for all of
 your ROS enabled Android applications. Let&#8217;s consider the following example
 from the android_tutorial_pubsub package. In this example, we create a
@@ -202,7 +220,7 @@ and ticker message of an Android <a class="reference external" href="http://deve
 notification to shut down all ROS nodes associated with the application.</p>
 <p>Lines 28-30 should look familiar to Android developers. We load the <a class="reference external" href="http://developer.android.com/reference/android/app/Activity.html">activity</a>
 layout and get a reference to our
-<a class="reference external" href="javadoc/org/ros/android/view/RosTextView.html#">RosTextView</a>. More on that later.</p>
+<a class="reference external" href="javadoc/org/ros/android/view/RosTextView.html#">RosTextView</a> (more on that later).</p>
 <p>On line 42 we define the abstract method
 <a class="reference external" href="javadoc/org/ros/android/RosActivity.html#init(org.ros.node.NodeMainExecutor)">RosActivity.init</a>.
 This is where we kick off our <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>s and other
@@ -291,7 +309,12 @@ to display the textual representation of published messages.</p>
 68
 69
 70
-71</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">android</span><span class="o">.</span><span class="na">view</span><span class="o">;</span>
+71
+72
+73
+74
+75
+76</pre></div></td><td class="code"><div class="highlight"><pre><span class="kn">package</span> <span class="n">org</span><span class="o">.</span><span class="na">ros</span><span class="o">.</span><span class="na">android</span><span class="o">.</span><span class="na">view</span><span class="o">;</span>
 
 <span class="kn">import</span> <span class="nn">android.content.Context</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">android.util.AttributeSet</span><span class="o">;</span>
@@ -299,6 +322,7 @@ to display the textual representation of published messages.</p>
 <span class="kn">import</span> <span class="nn">org.ros.android.MessageCallable</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.message.MessageListener</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.namespace.GraphName</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.ros.node.ConnectedNode</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.Node</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.NodeMain</span><span class="o">;</span>
 <span class="kn">import</span> <span class="nn">org.ros.node.topic.Subscriber</span><span class="o">;</span>
@@ -310,7 +334,7 @@ to display the textual representation of published messages.</p>
 
   <span class="kd">private</span> <span class="n">String</span> <span class="n">topicName</span><span class="o">;</span>
   <span class="kd">private</span> <span class="n">String</span> <span class="n">messageType</span><span class="o">;</span>
-  <span class="kd">private</span> <span class="n">MessageCallable</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">T</span><span class="o">&gt;</span> <span class="n">callable</span><span class="o">;</span>
+
   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setTopicName</span><span class="o">(</span><span class="n">String</span> <span class="n">topicName</span><span class="o">)</span> <span class="o">{</span>
     <span class="k">this</span><span class="o">.</span><span class="na">topicName</span> <span class="o">=</span> <span class="n">topicName</span><span class="o">;</span>
   <span class="o">}</span>
@@ -329,9 +353,9 @@ to display the textual representation of published messages.</p>
   <span class="o">}</span>
 
   <span class="nd">@Override</span>
-  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
-<span class="hll">    <span class="n">Subscriber</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">subscriber</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="na">newSubscriber</span><span class="o">(</span><span class="n">topicName</span><span class="o">,</span> <span class="n">messageType</span><span class="o">);</span>
-</span>    <span class="n">subscriber</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">MessageListener</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;()</span> <span class="o">{</span>
+<span class="hll">  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onStart</span><span class="o">(</span><span class="n">ConnectedNode</span> <span class="n">connectedNode</span><span class="o">)</span> <span class="o">{</span>
+</span>    <span class="n">Subscriber</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span> <span class="n">subscriber</span> <span class="o">=</span> <span class="n">connectedNode</span><span class="o">.</span><span class="na">newSubscriber</span><span class="o">(</span><span class="n">topicName</span><span class="o">,</span> <span class="n">messageType</span><span class="o">);</span>
+    <span class="n">subscriber</span><span class="o">.</span><span class="na">addMessageListener</span><span class="o">(</span><span class="k">new</span> <span class="n">MessageListener</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;()</span> <span class="o">{</span>
       <span class="nd">@Override</span>
       <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onNewMessage</span><span class="o">(</span><span class="kd">final</span> <span class="n">T</span> <span class="n">message</span><span class="o">)</span> <span class="o">{</span>
         <span class="k">if</span> <span class="o">(</span><span class="n">callable</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
@@ -361,6 +385,10 @@ to display the textual representation of published messages.</p>
   <span class="nd">@Override</span>
   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onShutdownComplete</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">)</span> <span class="o">{</span>
   <span class="o">}</span>
+
+  <span class="nd">@Override</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">onError</span><span class="o">(</span><span class="n">Node</span> <span class="n">node</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">throwable</span><span class="o">)</span> <span class="o">{</span>
+  <span class="o">}</span>
 <span class="o">}</span>
 </pre></div>
 </td></tr></table></div>
@@ -370,12 +398,12 @@ to display the textual representation of published messages.</p>
 <a class="reference external" href="javadoc/org/ros/node/topic/Subscriber.html#">Subscriber</a> for the configured topic and message
 type.</p>
 <p>When a new message arrives, we either use the configured callable to transform
-the incoming message to a string (line 48), or we use the default
-<tt class="docutils literal"><span class="pre">toString()</span></tt> method if no callable was configured (line 55). We then set the
+the incoming message to a string (line 49), or we use the default
+<tt class="docutils literal"><span class="pre">toString()</span></tt> method if no callable was configured (line 56). We then set the
 text of the view to the string representation of the incoming message.</p>
 <p>As with any other <a class="reference external" href="javadoc/org/ros/node/NodeMain.html#">NodeMain</a>, the
 <a class="reference external" href="javadoc/org/ros/android/view/RosTextView.html#">RosTextView</a> must be executed by the
-<a class="reference external" href="javadoc/org/ros/node/NodeMainExecutor.html#">NodeMainExecutor</a>. In the <a class="reference internal" href="#life-of-a-rosactivity"><em>Life of a RosActivity</em></a>
+<a class="reference external" href="javadoc/org/ros/node/NodeMainExecutor.html#">NodeMainExecutor</a>. In the <a class="reference internal" href="#life-of-a-rosactivity"><em>Using RosActivity</em></a>
 example, we execute it in
 <a class="reference external" href="javadoc/org/ros/android/RosActivity.html#init(NodeMainExecutor)">RosActivity.init</a> and use the it to
 display incoming messages from the

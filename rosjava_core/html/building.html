@@ -53,16 +53,21 @@
   <div class="section" id="building-rosjava-core">
 <span id="building"></span><h1>Building rosjava_core<a class="headerlink" href="#building-rosjava-core" title="Permalink to this headline">¶</a></h1>
 <p>rosjava_core uses the <a class="reference external" href="http://www.gradle.org/">Gradle</a> build system. <a class="reference external" href="http://ros.org/wiki/rosmake/">rosmake</a> is not supported.</p>
-<p>To build rosjava_core, execute the <a class="reference external" href="http://gradle.org/docs/current/userguide/gradle_wrapper.html">gradle wrapper</a>:</p>
+<p>To build rosjava_core and install it to your local <a class="reference external" href="http://maven.apache.org/">Maven</a> repository, execute
+the <a class="reference external" href="http://gradle.org/docs/current/userguide/gradle_wrapper.html">gradle wrapper</a>:</p>
 <div class="highlight-bash"><div class="highlight"><pre>roscd rosjava_core
 ./gradlew install
 </pre></div>
 </div>
-<p>If you do not want to build the documentation, you may exclude the docs:install task:</p>
-<div class="highlight-bash"><div class="highlight"><pre>./gradlew install -x docs:install
+<p>To build the documentation, you may execute the docs task:</p>
+<div class="highlight-bash"><div class="highlight"><pre>./gradlew docs
 </pre></div>
 </div>
-<p>To generate Eclipse project files:</p>
+<p>To run the tests, you may execute the test task:</p>
+<div class="highlight-bash"><div class="highlight"><pre>./gradlew <span class="nb">test</span>
+</pre></div>
+</div>
+<p>To generate Eclipse project files, you may execute the eclipse:</p>
 <div class="highlight-bash"><div class="highlight"><pre>./gradlew eclipse
 </pre></div>
 </div>
